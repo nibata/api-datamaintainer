@@ -13,7 +13,6 @@ from dotenv import load_dotenv
 
 load_dotenv(f"{parent_dir}/env/.env")
 
-#SQLALCHEMY_DATABASE_URL = "postgresql://postgres:postgrespw@localhost:55002/FastAPI_DB"
 SQLALCHEMY_DATABASE_URL = os.environ.get("URI_DATABASE") 
 
 engine = create_engine(
