@@ -1,6 +1,6 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
-from .database import Base
+from ..database import Base
  
  
 class Users(Base):
@@ -14,3 +14,4 @@ class Users(Base):
     hashed_password = Column(String(120))
     is_active = Column(Boolean, default=False)
     address = Column(String)
+    age = Column(Integer)

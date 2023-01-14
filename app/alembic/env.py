@@ -34,6 +34,8 @@ target_metadata = Base.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
+# para cargar en alembic la uri de la base de datos
+
 from dotenv import load_dotenv
 
 load_dotenv(f"{parent_dir}/env/.env")
