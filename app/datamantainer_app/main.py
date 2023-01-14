@@ -9,10 +9,13 @@
                                        |___/                                          
  nibata@gmail.com
 """
-
 from fastapi import FastAPI
+from .configs import settings
 from .routes import users_routes
 
-app = FastAPI()
+app = FastAPI(
+        title=settings.APP_NAME,
+        description=settings.DESCRIPTION
+)
 
 app.include_router(users_routes.router)

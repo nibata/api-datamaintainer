@@ -1,6 +1,7 @@
 import hashlib
-from ..database import Base
+from ..configs.database import Base
 #from sqlalchemy.orm import relationship
+from ..configs.settings import SECRET_KEY
 from sqlalchemy import Boolean, Column, Integer, String # , ForeignKey
  
  
@@ -9,7 +10,7 @@ class Users(Base):
  
     __tablename__ = "users"
     __table_args__ = {"schema": "authentication"}
- 
+
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String(120))
@@ -17,6 +18,7 @@ class Users(Base):
     address = Column(String)
     age = Column(Integer)
 
+    
     @staticmethod
     def set_password(pwd: str) -> str:
         """Genera password hasheada mediante método md5
@@ -33,8 +35,8 @@ class Users(Base):
         """
 
         # TODO: agregarle salt proveniente de las variables de entorno para aumentar seguridad de password
-        salt = "TEST"
-
+        
+        salt = SECRET_KEY
         password_to_hash = pwd + salt
         password = hashlib.md5(password_to_hash.encode()).hexdigest()
 
@@ -56,3 +58,4 @@ class Users(Base):
         """
 
         ...
+        
