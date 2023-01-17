@@ -53,4 +53,8 @@ jobs:
         DB_PASS: postgrespw
         DB_HOST: localhost
         DB_PORT: 5432
-        DB_DATABASE_NAME: FastAPI_DB      
+        DB_DATABASE_NAME: FastAPI_DB    
+
+    - name: test unitarios
+      run: pytest
+    
