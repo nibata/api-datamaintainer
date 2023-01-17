@@ -8,7 +8,7 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
+  build_app:
     runs-on: ubuntu-latest
     
     strategy:
@@ -17,13 +17,13 @@ jobs:
     
     services:
       # Label used to access the service container
-      postgres:
+      postgres_service:
         # Docker Hub image
         image: postgres:latest
         # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: postgrespw
-          POSTGRES_DB: api_db
+          POSTGRES_DB: FastAPI_DB
           
         # Set health checks to wait until postgres has started
         options: >-
@@ -41,4 +41,12 @@ jobs:
           architecture: x64
     - name: Install dependencies
       run: pip install -r requirements.txt 
-      
+    - name: Connect to postgres
+      run: alembic upgrade head
+      env:
+        DB_DRIVER: postgresql
+        DB_USER: postgres
+        DB_PASS: postgrespw
+        DB_HOST: postgres_service
+        DB_PORT: 5432
+        DB_DATABASE_NAME: FastAPI_DB      

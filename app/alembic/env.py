@@ -39,7 +39,15 @@ target_metadata = Base.metadata
 from dotenv import load_dotenv
 
 load_dotenv(f"{parent_dir}/env/.env")
-SQLALCHEMY_DATABASE_URL = os.environ.get("URI_DATABASE")
+
+DB_DRIVER=os.environ.get("DB_DRIVER")
+DB_USER=os.environ.get("DB_USER")
+DB_PASS=os.environ.get("DB_PASS")
+DB_HOST=os.environ.get("DB_HOST")
+DB_PORT=os.environ.get("DB_PORT")
+DB_DATABASE_NAME=os.environ.get("DB_DATABASE_NAME")
+
+SQLALCHEMY_DATABASE_URL = f"{DB_DRIVER}://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_DATABASE_NAME}"
 
 config.set_main_option('sqlalchemy.url', SQLALCHEMY_DATABASE_URL) 
 
