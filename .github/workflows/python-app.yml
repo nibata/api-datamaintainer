@@ -55,6 +55,13 @@ jobs:
         DB_PORT: 5432
         DB_DATABASE_NAME: FastAPI_DB    
 
-    - name: test unitarios
+    - name: Unit Test
       run: pytest
+      env:
+        DB_DRIVER: postgresql
+        DB_USER: postgres
+        DB_PASS: postgrespw
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_DATABASE_NAME: FastAPI_DB  
     
