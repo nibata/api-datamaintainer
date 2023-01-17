@@ -42,6 +42,7 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements.txt 
     - name: Connect to postgres
+      working-directory: ./app
       run: alembic upgrade head
       env:
         DB_DRIVER: postgresql
