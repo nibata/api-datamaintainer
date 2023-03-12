@@ -45,8 +45,8 @@ def test_create_user():
     }
 
     response_token = client.post("/user/login", json=json_token)
-    print(response_token)
     auth_token = response_token.json()["access_token"]
+    print(auth_token)
     headers = {"Authorization": f"Bearer {auth_token}"}
 
     response_test = client.post("/users", json=json_insert, headers=headers)
