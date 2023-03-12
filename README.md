@@ -1,5 +1,5 @@
 # API
-Este proyecto está diseñado para pmantener una base de datos mediante FastAPI y alembic.
+Este proyecto está diseñado para mantener una base de datos mediante FastAPI y alembic.
 
 Dentro de los primeros pasos se crea el proyecto que se menciona en el siguiente articulo: [ARTICULO](https://neuralcovenant.com/2020/12/29/aprendiendo-fastapi-con-postgresql/)
 
@@ -10,4 +10,4 @@ Para crear las migraciones:
  - `alembic revision --autogenerate -m "[MENSAJE]"`
  - `alembic upgrade head`
 
-Para correr testunitarios sobre la API se requiere pytest y correr el comando `pytest` el cual ejecutara todos loss test que encuentre en el proyecto. En el caso específico de este proyecto, los test se encuentran en la carpeta test de la aplicación.
+Para correr test unitarios sobre la API se requiere pytest y correr el comando `pytest` el cual ejecutará todos los test que encuentre en el proyecto. En el caso específico de este proyecto, los test se encuentran en la carpeta test de la aplicación.
