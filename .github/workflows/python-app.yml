@@ -70,4 +70,6 @@ jobs:
         DB_DATABASE_NAME: FastAPI_DB  
         USER_ADMIN: nibata@gmail.com
         PASS_ADMIN: a1b2-3
+        JWT_SECRET: please_please_update_me_please
+        JWT_ALGORITHM: HS256
     
