@@ -1,5 +1,7 @@
 from . import get_db
 from typing import List
+from ..auth import auth_bearer
+from ..auth import auth_handler
 from sqlalchemy.orm import Session
 from ..schemas import users_schemas
 from ..controller import users_controller
@@ -9,7 +11,16 @@ from fastapi import APIRouter, Depends, HTTPException
 router = APIRouter()
 
 
-@router.post("/users", response_model=users_schemas.User)
+@router.post("/user/login")
+async def user_login(user: users_schemas.UserLogin, db:Session = Depends(get_db)):
+    if users_controller.check_user_password(db=db, user=user):
+        return auth_handler.signJWT(user.email)
+    return {
+        "error": "Wrong login details!"
+    }
+
+
+@router.post("/users", response_model=users_schemas.User, dependencies=[Depends(auth_bearer.JWTBearer())])
 async def create_user(user: users_schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = users_controller.get_user_by_email(db, email=user.email)
     if db_user:

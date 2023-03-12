@@ -23,3 +23,6 @@ DB_PORT=os.environ.get("DB_PORT")
 DB_DATABASE_NAME=os.environ.get("DB_DATABASE_NAME")
 SQLALCHEMY_DATABASE_URL = f"{DB_DRIVER}://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_DATABASE_NAME}"
 DEBUG = os.environ.get("DEBUG")
+JWT_SECRET=os.environ.get("JWT_SECRET")
+JWT_ALGORITHM=os.environ.get("JWT_ALGORITHM")
+

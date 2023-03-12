@@ -17,8 +17,25 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
  
 def create_user(db: Session, user: users_schemas.UserCreate):
     hashed_password = model_users.Users.set_password(user.password)
-    db_user = model_users.Users(email=user.email, hashed_password=hashed_password)
+    db_user = model_users.Users(fullname=user.fullname,
+                                email=user.email, 
+                                hashed_password=hashed_password)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
+
     return db_user
+
+
+def check_user_password(db: Session, user: users_schemas.UserLogin):
+    hashed_password = model_users.Users.set_password(user.password)
+    db_user = get_user_by_email(db, user.email)
+    
+    if db_user is not None:
+        rtn = db_user.hashed_password == hashed_password
+        return rtn
+    
+    else:
+        return False
+
+    

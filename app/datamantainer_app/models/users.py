@@ -12,6 +12,7 @@ class Users(Base):
     __table_args__ = {"schema": "authentication"}
 
     id = Column(Integer, primary_key=True, index=True)
+    fullname = Column(String)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String(120))
     is_active = Column(Boolean, default=False)
@@ -56,6 +57,12 @@ class Users(Base):
         bool
             True si la password ingresada se corresponde con el usuario, False en caso contrario.
         """
+        salt = SECRET_KEY
+        password_to_hash = pwd + salt
+        password = hashlib.md5(password_to_hash.encode()).hexdigest()
 
-        ...
+        check = password == self.hashed_password
+
+        return check
+        
         
