@@ -25,4 +25,5 @@ SQLALCHEMY_DATABASE_URL = f"{DB_DRIVER}://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT
 DEBUG = os.environ.get("DEBUG")
 JWT_SECRET=os.environ.get("JWT_SECRET")
 JWT_ALGORITHM=os.environ.get("JWT_ALGORITHM")
-
+USER_ADMIN=os.environ.get("USER_ADMIN")
+PASS_ADMIN=os.environ.get("PASS_ADMIN")

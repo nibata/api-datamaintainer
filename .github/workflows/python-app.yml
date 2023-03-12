@@ -55,6 +55,8 @@ jobs:
         DB_PORT: 5432
         DB_DATABASE_NAME: FastAPI_DB  
         SECRET_KEY: "WELL... NOTHING NEW, JUST THINKING ABOUT SECRETS"  
+        USER_ADMIN: nibata@gmail.com
+        PASS_ADMIN: a1b2-3
 
     - name: Unit Test
       run: pytest
@@ -66,4 +68,6 @@ jobs:
         DB_HOST: localhost
         DB_PORT: 5432
         DB_DATABASE_NAME: FastAPI_DB  
+        USER_ADMIN: nibata@gmail.com
+        PASS_ADMIN: a1b2-3
     
