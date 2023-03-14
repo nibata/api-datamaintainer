@@ -14,13 +14,13 @@ router = APIRouter()
 @router.post("/user/login")
 async def user_login(user: users_schemas.UserLogin, db:Session = Depends(get_db)):
     if users_controller.check_user_password(db=db, user=user):
-        return auth_handler.signJWT(user.email)
+        return auth_handler.signJWT(user_id=user.email, roles=["SELECT"])
     return {
         "error": "Wrong login details!"
     }
 
 
-@router.post("/users", response_model=users_schemas.User, dependencies=[Depends(auth_bearer.JWTBearer())])
+@router.post("/users", response_model=users_schemas.User, dependencies=[Depends(auth_bearer.JWTBearer(required_permision=["SELECT"]))])
 async def create_user(user: users_schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = users_controller.get_user_by_email(db, email=user.email)
     if db_user:

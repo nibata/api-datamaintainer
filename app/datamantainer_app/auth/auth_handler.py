@@ -1,5 +1,5 @@
 import time
-from typing import Dict
+from typing import Dict, List
 
 import jwt
 from ..configs import settings
@@ -15,9 +15,10 @@ def token_response(token: str):
     }
 
 
-def signJWT(user_id: str) -> Dict[str, str]:
+def signJWT(user_id: str, roles: List[str]) -> Dict[str, str]:
     payload = {
         "user_id": user_id,
+        "roles": roles,
         "expires": time.time() + 600
     }
     token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)

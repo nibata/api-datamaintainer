@@ -1,12 +1,13 @@
+from typing import List
 from .auth_handler import decodeJWT
 from fastapi import Request, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 
 class JWTBearer(HTTPBearer):
-    def __init__(self, auto_error: bool = True):
+    def __init__(self, required_permision: List[str], auto_error: bool = True):
         super(JWTBearer, self).__init__(auto_error=auto_error)
-
+        self.required_permision: List[str] = required_permision
 
     async def __call__(self, request: Request):
         credentials: HTTPAuthorizationCredentials = await super(JWTBearer, self).__call__(request)
@@ -28,5 +29,7 @@ class JWTBearer(HTTPBearer):
         except:
             payload = None
         if payload:
-            isTokenValid = True
+            user_roles = payload["roles"]
+            isTokenValid = any(role in self.required_permision for role in user_roles)
+            
         return isTokenValid
