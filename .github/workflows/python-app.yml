@@ -72,4 +72,5 @@ jobs:
         PASS_ADMIN: a1b2-3
         JWT_SECRET: please_please_update_me_please
         JWT_ALGORITHM: HS256
+        SENTRY_DNS: ${{ secrets.SENTRY_DNS }}
     

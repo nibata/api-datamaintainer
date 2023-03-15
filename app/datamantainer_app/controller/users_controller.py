@@ -37,5 +37,3 @@ def check_user_password(db: Session, user: users_schemas.UserLogin):
     
     else:
         return False
-
-    
