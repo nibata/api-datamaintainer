@@ -1,8 +1,5 @@
-import hashlib
 from ..configs.database import Base
-#from sqlalchemy.orm import relationship
-from ..configs.settings import SECRET_KEY
-from sqlalchemy import Boolean, Column, Integer, String # , ForeignKey
+from sqlalchemy import Column, Integer, String 
  
  
 class Groups(Base):

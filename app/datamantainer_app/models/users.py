@@ -1,7 +1,7 @@
 import hashlib
 from ..configs.database import Base
-from sqlalchemy.orm import relationship, backref
 from ..configs.settings import SECRET_KEY
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy import Boolean, Column, Integer, String, Table, ForeignKey
  
 
@@ -11,8 +11,7 @@ users_groups = Table('users_groups',
                      Base.metadata,
                      Column('user_id', Integer, ForeignKey('authentication.users.id'), primary_key=True),
                      Column('group_id', Integer, ForeignKey('authentication.groups.id'), primary_key=True),
-                     schema = "authentication"
-) 
+                     schema = "authentication") 
 
 
 class Users(Base):
@@ -76,5 +75,4 @@ class Users(Base):
         check = password == self.hashed_password
 
         return check
-        
         
