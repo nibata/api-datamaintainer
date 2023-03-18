@@ -1,10 +1,20 @@
 import hashlib
 from ..configs.database import Base
-#from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 from ..configs.settings import SECRET_KEY
-from sqlalchemy import Boolean, Column, Integer, String # , ForeignKey
+from sqlalchemy import Boolean, Column, Integer, String, Table, ForeignKey
  
- 
+
+# Tabla de relacion entre users y groups (muchos a muchos). la documentacion recomienda 
+# encarecidamente no realizar esta relacion con un modelo si no que con una tabla directamente
+users_groups = Table('users_groups',
+                     Base.metadata,
+                     Column('user_id', Integer, ForeignKey('authentication.users.id'), primary_key=True),
+                     Column('group_id', Integer, ForeignKey('authentication.groups.id'), primary_key=True),
+                     schema = "authentication"
+) 
+
+
 class Users(Base):
     """User Class contains standard information for a User."""
  
@@ -18,6 +28,8 @@ class Users(Base):
     is_active = Column(Boolean, default=False)
     address = Column(String)
     age = Column(Integer)
+
+    users_groups = relationship('Groups', secondary=users_groups, lazy='subquery', backref=backref('users', lazy=True)) 
 
     
     @staticmethod
