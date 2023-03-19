@@ -1,6 +1,6 @@
-from sqlalchemy import select
 from sqlalchemy.orm import Session
 from ..schemas import users_schemas
+from sqlalchemy import select, insert
 from ..models import users as model_users
 from .groups_controller import get_groups_by_id_list
  
@@ -38,6 +38,14 @@ def get_groups_from_user(db: Session, user_id: int):
 
     return rtn
 
+
+def assign_role_to_user(db: Session, user_id: int, group_id: int):
+    statement = insert(model_users.users_groups).values(user_id=user_id, group_id=group_id)
+    db.execute(statement)
+    db.commit()
+
+    return {'user_id': user_id,
+            'group_id': group_id}
 
 
 def check_user_password(db: Session, user: users_schemas.UserLogin):

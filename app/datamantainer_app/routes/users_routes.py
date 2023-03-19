@@ -3,9 +3,9 @@ from typing import List
 from ..auth import auth_bearer
 from ..auth import auth_handler
 from sqlalchemy.orm import Session
-from ..schemas import users_schemas
 from ..controller import users_controller
 from fastapi import APIRouter, Depends, HTTPException
+from ..schemas import users_schemas, users_groups_schema
 
 
 router = APIRouter()
@@ -45,9 +45,16 @@ async def read_user(user_id: int, db: Session = Depends(get_db)):
     return db_user
 
 
-@router.get("/users/test")
-async def test(user_id: int, db: Session = Depends(get_db)):
-    tt = users_controller.get_groups_from_user(db=db, 
-                                                user_id=user_id)
+@router.post("/users/assign_role_to_user", dependencies=[Depends(auth_bearer.JWTBearer(required_permision=["ADMINISTRATOR"]))])
+async def assign_role_to_user(user_group: users_groups_schema.UserAssignGroup, db: Session = Depends(get_db)):
+    user_roles = [group.id for group in users_controller.get_groups_from_user(db=db, user_id=user_group.user_id)]
+    user = users_controller.get_user(db=db, user_id=user_group.user_id)
     
-    return tt
+    if user_group.group_id in user_roles:
+        raise HTTPException(status_code=400, detail="The user is already assigned to this role")
+    
+    elif user is None:
+        raise HTTPException(status_code=400, detail="The user doesn't exists")
+    
+    return users_controller.assign_role_to_user(db=db, user_id=user_group.user_id, group_id=user_group.group_id)
+    
