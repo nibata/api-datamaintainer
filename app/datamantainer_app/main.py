@@ -12,7 +12,7 @@
 from fastapi import FastAPI
 from .configs.sentry import *
 from .configs import settings
-from .routes import users_routes, default_routes
+from .routes import users_routes, default_routes, groups_routes
 
 app = FastAPI(
         title=settings.APP_NAME,
@@ -21,3 +21,4 @@ app = FastAPI(
 
 app.include_router(users_routes.router)
 app.include_router(default_routes.router)
+app.include_router(groups_routes.router)

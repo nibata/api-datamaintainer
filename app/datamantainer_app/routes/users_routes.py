@@ -23,7 +23,7 @@ async def user_login(user: users_schemas.UserLogin, db:Session = Depends(get_db)
     }
 
 
-@router.post("/users", response_model=users_schemas.User, dependencies=[Depends(auth_bearer.JWTBearer(required_permision=["SELECT"]))])
+@router.post("/users", response_model=users_schemas.User, dependencies=[Depends(auth_bearer.JWTBearer(required_permision=["INSERT"]))])
 async def create_user(user: users_schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = users_controller.get_user_by_email(db, email=user.email)
     if db_user:
