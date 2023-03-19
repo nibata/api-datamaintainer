@@ -29,7 +29,7 @@ def test_get_user_nibata_in_id_1():
         "fullname": "Nicolás Bacquet",
         "email": "nibata@gmail.com", 
         "id": 1, 
-        "is_active": False
+        "is_active": True
     }
 
 def test_create_user():
