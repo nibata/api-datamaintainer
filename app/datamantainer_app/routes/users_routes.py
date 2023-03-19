@@ -14,7 +14,10 @@ router = APIRouter()
 @router.post("/user/login")
 async def user_login(user: users_schemas.UserLogin, db:Session = Depends(get_db)):
     if users_controller.check_user_password(db=db, user=user):
-        return auth_handler.signJWT(user_id=user.email, roles=["SELECT"])
+        db_user = users_controller.get_user_by_email(db, email=user.email)
+        roles = users_controller.get_groups_from_user(db=db, user_id=db_user.id)
+
+        return auth_handler.signJWT(user_id=user.email, roles=roles)
     return {
         "error": "Wrong login details!"
     }
@@ -40,3 +43,11 @@ async def read_user(user_id: int, db: Session = Depends(get_db)):
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
+
+
+@router.get("/users/test")
+async def test(user_id: int, db: Session = Depends(get_db)):
+    tt = users_controller.get_groups_from_user(db=db, 
+                                                user_id=user_id)
+    
+    return tt

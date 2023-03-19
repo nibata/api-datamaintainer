@@ -1,6 +1,8 @@
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 from ..schemas import users_schemas
 from ..models import users as model_users
+from .groups_controller import get_groups_by_id_list
  
  
 def get_user(db: Session, user_id: int):
@@ -25,6 +27,17 @@ def create_user(db: Session, user: users_schemas.UserCreate):
     db.refresh(db_user)
 
     return db_user
+
+
+def get_groups_from_user(db: Session, user_id: int):
+    statement = select(model_users.users_groups).filter_by(user_id=user_id)
+    groups = db.execute(statement).all()
+    groups_list = [group["group_id"] for group in groups]
+    
+    rtn = get_groups_by_id_list(db, groups_list)
+
+    return rtn
+
 
 
 def check_user_password(db: Session, user: users_schemas.UserLogin):

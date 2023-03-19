@@ -3,6 +3,7 @@ from typing import Dict, List
 
 import jwt
 from ..configs import settings
+from ..models.groups import Groups
 
 
 JWT_SECRET = settings.JWT_SECRET
@@ -15,10 +16,11 @@ def token_response(token: str):
     }
 
 
-def signJWT(user_id: str, roles: List[str]) -> Dict[str, str]:
+def signJWT(user_id: str, roles: List[Groups]) -> Dict[str, str]:
+    roles_list = [role.code for role in roles]
     payload = {
         "user_id": user_id,
-        "roles": roles,
+        "roles": roles_list,
         "expires": time.time() + 600
     }
     token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
