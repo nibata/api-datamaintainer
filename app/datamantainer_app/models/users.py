@@ -2,7 +2,7 @@ import hashlib
 from ..configs.database import Base
 from ..configs.settings import SECRET_KEY
 from sqlalchemy.orm import relationship, backref
-from sqlalchemy import Boolean, Column, Integer, String, Table, ForeignKey
+from sqlalchemy import Boolean, Column, Integer, String, Table, ForeignKey, UniqueConstraint
  
 
 # Tabla de relacion entre users y groups (muchos a muchos). la documentacion recomienda 
@@ -10,8 +10,9 @@ from sqlalchemy import Boolean, Column, Integer, String, Table, ForeignKey
 users_groups = Table('users_groups',
                      Base.metadata,
                      Column('user_id', Integer, ForeignKey('authentication.users.id'), primary_key=True),
-                     Column('group_id', Integer, ForeignKey('authentication.groups.id'), primary_key=True),
-                     schema = "authentication") 
+                     Column('group_id', Integer, ForeignKey('authentication.groups.id'), primary_key=True),    
+                     UniqueConstraint('user_id', 'group_id', name='uix_1'),
+                     schema = "authentication",) 
 
 
 class Users(Base):

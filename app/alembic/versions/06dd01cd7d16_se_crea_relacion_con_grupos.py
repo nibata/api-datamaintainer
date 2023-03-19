@@ -7,6 +7,7 @@ Create Date: 2023-03-18 18:26:17.081632
 """
 from alembic import op
 import sqlalchemy as sa
+from datamantainer_app.configs.settings import USER_ADMIN
 
 
 # revision identifiers, used by Alembic.
@@ -27,23 +28,37 @@ def upgrade() -> None:
 
     op.create_index(op.f('ix_authentication_groups_description'), 'groups', ['description'], unique=True, schema='authentication')
     op.create_index(op.f('ix_authentication_groups_id'), 'groups', ['id'], unique=False, schema='authentication')
+    
     op.create_table('users_groups',
-    sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('group_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['group_id'], ['authentication.groups.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['authentication.users.id'], ),
-    sa.PrimaryKeyConstraint('user_id', 'group_id'),
-    schema='authentication')
+                    sa.Column('user_id', sa.Integer(), nullable=False),
+                    sa.Column('group_id', sa.Integer(), nullable=False),
+                    sa.ForeignKeyConstraint(['group_id'], ['authentication.groups.id'], ),
+                    sa.ForeignKeyConstraint(['user_id'], ['authentication.users.id'], ),
+                    sa.PrimaryKeyConstraint('user_id', 'group_id'),
+                    schema='authentication')
 
     # ### end Alembic commands ###
 
     # Deafult roles
-    roles = [{"code": "ADMINISTRATOR", "description": "Administrator privileges role"},
-             {"code": "SELECT", "description": "Basic select role"},
-             {"code": "INSERT", "description": "Basic insert role"},]
+    admin_code = "ADMINISTRATOR"
+    select_code = "SELECT"
+    insert_code = "INSERT"
+    roles = [{"code": admin_code, "description": "Administrator privileges role"},
+             {"code": select_code, "description": "Basic select role"},
+             {"code": insert_code, "description": "Basic insert role"},]
     
     op.bulk_insert(group_table,
                    roles)
+    
+    
+    
+    op.execute(f"""INSERT INTO authentication.users_groups(user_id, group_id) 
+                   VALUES ((SELECT id FROM authentication.users WHERE email = '{USER_ADMIN}'),
+                           (SELECT id FROM authentication.groups WHERE code = '{admin_code}')),
+                           ((SELECT id FROM authentication.users WHERE email = '{USER_ADMIN}'),
+                           (SELECT id FROM authentication.groups WHERE code = '{select_code}')),
+                           ((SELECT id FROM authentication.users WHERE email = '{USER_ADMIN}'),
+                           (SELECT id FROM authentication.groups WHERE code = '{insert_code}'))""")
 
 
 def downgrade() -> None:
