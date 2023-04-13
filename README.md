@@ -6,6 +6,9 @@ Dentro de los primeros pasos se crea el proyecto que se menciona en el siguiente
 Para correr el proyecto con **gunicorn** ejecutar *(se deben usar workers uvicorn para esto)*: 
  - `gunicorn datamantainer_app.main:app --worker-class uvicorn.workers.UvicornWorker --reload`
 
+Para correr directamente con **uvicorn** (en el caso de usar Windows):
+ - `uvicorn datamantainer_app.main:app --reload`
+
 Para crear las migraciones: 
  - `alembic revision --autogenerate -m "[MENSAJE]"`
  - `alembic upgrade head`
