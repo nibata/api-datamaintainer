@@ -59,7 +59,7 @@ jobs:
         PASS_ADMIN: a1b2-3
 
     - name: Unit Test
-      run: pytest
+      run: pytest --junitxml=res-test.xml
       env:
         SECRET_KEY: "WELL... NOTHING NEW, JUST THINKING ABOUT SECRETS"
         DB_DRIVER: postgresql
@@ -73,4 +73,10 @@ jobs:
         JWT_SECRET: please_please_update_me_please
         JWT_ALGORITHM: HS256
         SENTRY_DNS: ${{ secrets.SENTRY_DNS }}
+        
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v3
+      if: success() || failure()
+      with:
+        report_paths: 'res-test.xml'
     
