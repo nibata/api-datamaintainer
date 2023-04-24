@@ -8,7 +8,7 @@ client = TestClient(app=app)
 def test_check_life_of_users_route():
     response = client.get("/users")
     
-    assert response.status_code == 404
+    assert response.status_code == 200
 
 
 def test_create_user_without_authorization():
