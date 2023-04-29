@@ -2,9 +2,9 @@ from .. import get_db
 from typing import List
 from ...auth import auth_bearer
 from sqlalchemy.orm import Session
-from ...schemas import groups_schema
-from ...controller.authentication import groups_controller
+from ...schemas.authentication import groups_schema
 from fastapi import APIRouter, Depends, HTTPException
+from ...controller.authentication import groups_controller
 
 
 router = APIRouter()
