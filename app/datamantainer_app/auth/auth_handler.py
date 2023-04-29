@@ -1,9 +1,8 @@
+import jwt
 import time
 from typing import Dict, List
-
-import jwt
 from ..configs import settings
-from ..models.groups import Groups
+from ..models.authentication.groups import Groups
 
 
 JWT_SECRET = settings.JWT_SECRET

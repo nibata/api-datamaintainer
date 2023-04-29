@@ -1,11 +1,11 @@
-from . import get_db
+from .. import get_db
 from typing import List
-from ..auth import auth_bearer
-from ..auth import auth_handler
+from ...auth import auth_bearer
+from ...auth import auth_handler
 from sqlalchemy.orm import Session
-from ..controller import users_controller
 from fastapi import APIRouter, Depends, HTTPException
-from ..schemas import users_schemas, users_groups_schema
+from ...controller.authentication import users_controller
+from ...schemas.authentication import users_schemas, users_groups_schema
 
 
 router = APIRouter()

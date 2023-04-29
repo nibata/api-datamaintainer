@@ -10,9 +10,11 @@
  nibata@gmail.com
 """
 from fastapi import FastAPI
+
 from .configs.sentry import *
 from .configs import settings
-from .routes import users_routes, default_routes, groups_routes
+from .routes.default import default_routes
+from .routes.authentication import users_routes, groups_routes
 
 app = FastAPI(
         title=settings.APP_NAME,

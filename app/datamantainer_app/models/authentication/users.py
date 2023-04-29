@@ -1,6 +1,6 @@
 import hashlib
-from ..configs.database import Base
-from ..configs.settings import SECRET_KEY
+from ...configs.database import Base
+from ...configs.settings import SECRET_KEY
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy import Boolean, Column, Integer, String, Table, ForeignKey, UniqueConstraint
  

@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
-from ..schemas import users_schemas
 from sqlalchemy import select, insert
-from ..models import users as model_users
+from ...schemas.authentication import users_schemas
 from .groups_controller import get_groups_by_id_list
+from ...models.authentication import users as model_users
  
  
 def get_user(db: Session, user_id: int):

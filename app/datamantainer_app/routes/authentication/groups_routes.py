@@ -1,9 +1,9 @@
-from . import get_db
+from .. import get_db
 from typing import List
-from ..auth import auth_bearer
+from ...auth import auth_bearer
 from sqlalchemy.orm import Session
-from ..schemas import groups_schema
-from ..controller import groups_controller
+from ...schemas import groups_schema
+from ...controller.authentication import groups_controller
 from fastapi import APIRouter, Depends, HTTPException
 
 

@@ -1,7 +1,7 @@
 from typing import List
 from sqlalchemy.orm import Session
-from ..schemas import groups_schema
-from ..models import groups as model_group
+from ...schemas.authentication import groups_schema
+from ...models.authentication import groups as model_group
  
  
 def get_group_by_id(db: Session, group_id: int):

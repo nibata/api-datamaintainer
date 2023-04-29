@@ -7,7 +7,7 @@ Create Date: 2022-12-18 16:06:35.500944
 """
 from alembic import op
 import sqlalchemy as sa
-from datamantainer_app.models.users import Users
+from datamantainer_app.models.authentication.users import Users
 from datamantainer_app.configs.settings import USER_ADMIN, PASS_ADMIN
 
 # revision identifiers, used by Alembic.
