@@ -42,7 +42,7 @@ def test_create_user():
          "fullname": "test",
          "email": "test@test.test", 
          "password": "pwd_test",
-         "expiration_date": "2023-05-01"
+         "expiration_date": None
     }
 
     response_token = client.post("/user/login", json=json_token)
