@@ -2,7 +2,7 @@ import hashlib
 from ...configs.database import Base
 from ...configs.settings import SECRET_KEY
 from sqlalchemy.orm import relationship, backref
-from sqlalchemy import Boolean, Column, Integer, String, Table, ForeignKey, UniqueConstraint
+from sqlalchemy import Boolean, Column, Integer, String, Table, ForeignKey, UniqueConstraint, false
  
 
 # Tabla de relacion entre users y groups (muchos a muchos). la documentacion recomienda 
@@ -22,16 +22,15 @@ class Users(Base):
     __table_args__ = {"schema": "authentication"}
 
     id = Column(Integer, primary_key=True, index=True)
-    fullname = Column(String)
-    email = Column(String, unique=True, index=True)
-    hashed_password = Column(String(120))
-    is_active = Column(Boolean, default=False)
+    fullname = Column(String, nullable=False)
+    email = Column(String, unique=True, index=True, nullable=False)
+    is_active = Column(Boolean, server_default=false(), nullable=False)
     address = Column(String)
     age = Column(Integer)
 
     users_groups = relationship('Groups', secondary=users_groups, lazy='subquery', backref=backref('users', lazy=True)) 
 
-    
+    '''
     @staticmethod
     def set_password(pwd: str) -> str:
         """Genera password hasheada mediante método md5
@@ -54,8 +53,8 @@ class Users(Base):
         password = hashlib.md5(password_to_hash.encode()).hexdigest()
 
         return password
-
-
+    '''
+    '''
     def check_password(self, pwd: str) -> bool:
         """Chequea que el password se corresponda con lo registrado en base de datos.
 
@@ -76,4 +75,4 @@ class Users(Base):
         check = password == self.hashed_password
 
         return check
-        
+    '''       

@@ -9,6 +9,8 @@
                                        |___/                                          
  nibata@gmail.com
 """
+import uvicorn
+
 from fastapi import FastAPI
 
 from .configs.sentry import *

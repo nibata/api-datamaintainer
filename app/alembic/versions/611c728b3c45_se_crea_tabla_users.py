@@ -9,6 +9,7 @@ from alembic import op
 import sqlalchemy as sa
 from datamantainer_app.models.authentication.users import Users
 from datamantainer_app.configs.settings import USER_ADMIN, PASS_ADMIN
+from datamantainer_app.models.authentication.passwords import Passwords
 
 # revision identifiers, used by Alembic.
 revision = '611c728b3c45'
@@ -32,7 +33,7 @@ def upgrade() -> None:
     op.create_index(op.f('ix_authentication_users_id'), 'users', ['id'], unique=False, schema='authentication')
     # ### end Alembic commands ###
     
-    hashed_pwd = Users.set_password(PASS_ADMIN)
+    hashed_pwd = Passwords.set_password(PASS_ADMIN)
     user_admin = [{"email": USER_ADMIN, "hashed_password": hashed_pwd, "is_active": True}]
     op.bulk_insert(table_users,
                    user_admin)

@@ -5,6 +5,7 @@ from ...auth import auth_handler
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException
 from ...controller.authentication import users_controller
+from ...controller.authentication import passwords_controller
 from ...schemas.authentication import users_schemas, users_groups_schema
 
 
@@ -13,6 +14,7 @@ router = APIRouter()
 
 @router.post("/user/login")
 async def user_login(user: users_schemas.UserLogin, db:Session = Depends(get_db)):
+    
     if users_controller.check_user_password(db=db, user=user):
         db_user = users_controller.get_user_by_email(db, email=user.email)
         roles = users_controller.get_groups_from_user(db=db, user_id=db_user.id)
@@ -28,8 +30,15 @@ async def create_user(user: users_schemas.UserCreate, db: Session = Depends(get_
     db_user = users_controller.get_user_by_email(db, email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
-    return users_controller.create_user(db=db, user=user)
- 
+    
+    # create user
+    user_db = users_controller.create_user(db=db, user=user)
+    
+    # set password
+    passwords_controller.create_password(db, user_db.id, user.password)
+
+    return user_db
+
  
 @router.get("/users", response_model=List[users_schemas.User])
 async def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):

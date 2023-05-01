@@ -1,5 +1,6 @@
-from typing import List, Optional
+from datetime import date
 from pydantic import BaseModel
+from typing import List, Optional
  
  
 class UserBase(BaseModel):
@@ -9,8 +10,9 @@ class UserBase(BaseModel):
  
 class UserCreate(UserBase):
     password: str
+    expiration_date: date
  
- 
+
 class User(UserBase):
     id: int
     is_active: bool
@@ -22,4 +24,3 @@ class User(UserBase):
 class UserLogin(BaseModel):
     email: str
     password: str
-

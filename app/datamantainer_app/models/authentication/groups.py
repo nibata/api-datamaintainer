@@ -9,5 +9,5 @@ class Groups(Base):
     __table_args__ = {"schema": "authentication"}
 
     id = Column(Integer, primary_key=True, index=True)
-    code = Column(String)
-    description = Column(String, unique=True, index=True)
+    code = Column(String, unique=True, index=True, nullable=False)
+    description = Column(String)

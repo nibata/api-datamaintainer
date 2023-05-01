@@ -1,8 +1,10 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, insert
+from .passwords_controller import check_password
 from ...schemas.authentication import users_schemas
 from .groups_controller import get_groups_by_id_list
 from ...models.authentication import users as model_users
+
  
  
 def get_user(db: Session, user_id: int):
@@ -18,10 +20,9 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
  
  
 def create_user(db: Session, user: users_schemas.UserCreate):
-    hashed_password = model_users.Users.set_password(user.password)
     db_user = model_users.Users(fullname=user.fullname,
-                                email=user.email, 
-                                hashed_password=hashed_password)
+                                email=user.email)
+    
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -49,12 +50,9 @@ def assign_role_to_user(db: Session, user_id: int, group_id: int):
 
 
 def check_user_password(db: Session, user: users_schemas.UserLogin):
-    hashed_password = model_users.Users.set_password(user.password)
+    password = user.password
     db_user = get_user_by_email(db, user.email)
-    
-    if db_user is not None:
-        rtn = db_user.hashed_password == hashed_password
-        return rtn
-    
-    else:
-        return False
+
+    return check_password(db, db_user.id, password)
+
+
