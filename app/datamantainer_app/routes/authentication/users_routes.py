@@ -35,7 +35,7 @@ async def create_user(user: users_schemas.UserCreate, db: Session = Depends(get_
     user_db = users_controller.create_user(db=db, user=user)
     
     # set password
-    passwords_controller.create_password(db, user_db.id, user.password)
+    passwords_controller.create_password(db, user_db.id, user.password, user.expiration_date)
 
     return user_db
 
