@@ -10,7 +10,7 @@ class UserBase(BaseModel):
  
 class UserCreate(UserBase):
     password: str
-    expiration_date: date
+    expiration_date: date = None
  
 
 class User(UserBase):
