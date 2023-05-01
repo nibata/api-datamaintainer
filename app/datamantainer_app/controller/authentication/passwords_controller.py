@@ -1,4 +1,5 @@
 from datetime import date
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import select, insert
 from ...models.authentication import users as model_users
@@ -95,7 +96,7 @@ def create_password(db: Session, user_id: int, password: str, expiration_date: d
     """
 
     if there_is_active_password_for_user(db, user_id):
-        raise Exception("there is already an active password. Use update_password method instead of create_password method")
+        raise HTTPException(status_code=400, detail="there is already an active password. Use update_password method instead of create_password method")
     
     hashed_password = model_password.Passwords.set_password(password)
 
@@ -155,7 +156,7 @@ def update_password(db: Session, user_id: int, current_password: str, new_passwo
     """
 
     if not there_is_active_password_for_user(db, user_id):
-        raise Exception("there is no an active password. Use create_password method instead of update_password method")
+        raise HTTPException(status_code=400, detail="there is no an active password. Use create_password method instead of update_password method")
     
     if check_password(db, user_id, current_password):
         # this make this function a non pure function
@@ -163,6 +164,6 @@ def update_password(db: Session, user_id: int, current_password: str, new_passwo
         return create_password(db, user_id, new_password, expiration_date)
     
     else:
-        raise Exception("Password can not be changed. Current active password does not match with the 'Current password given'")
+        raise HTTPException(status_code=400, detail="Password can not be changed. Current active password does not match with the 'Current password given'")
 
 

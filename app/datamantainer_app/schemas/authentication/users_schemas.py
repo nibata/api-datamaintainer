@@ -4,11 +4,11 @@ from typing import List, Optional
  
  
 class UserBase(BaseModel):
-    fullname: str
     email: str
  
  
 class UserCreate(UserBase):
+    fullname: str
     password: str
     expiration_date: date = None
  
@@ -16,7 +16,8 @@ class UserCreate(UserBase):
 class User(UserBase):
     id: int
     is_active: bool
- 
+    fullname: str
+    
     class Config:
         orm_mode = True
 
