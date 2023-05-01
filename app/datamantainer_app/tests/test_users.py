@@ -41,12 +41,12 @@ def test_create_user():
     json_insert = {
          "fullname": "test",
          "email": "test@test.test", 
-         "password": "pwd_test"
+         "password": "pwd_test",
+         "expiration_date": "2023-05-01"
     }
 
     response_token = client.post("/user/login", json=json_token)
     auth_token = response_token.json()["access_token"]
-    print(auth_token)
     headers = {"Authorization": f"Bearer {auth_token}"}
 
     response_test = client.post("/users", json=json_insert, headers=headers)
