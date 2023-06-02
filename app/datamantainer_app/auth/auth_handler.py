@@ -15,7 +15,7 @@ def token_response(token: str):
     }
 
 
-def signJWT(user_id: str, roles: List[Groups]) -> Dict[str, str]:
+def sign_jwt(user_id: str, roles: List[Groups]) -> Dict[str, str]:
     roles_list = [role.code for role in roles]
     payload = {
         "user_id": user_id,
@@ -27,7 +27,7 @@ def signJWT(user_id: str, roles: List[Groups]) -> Dict[str, str]:
     return token_response(token)
 
 
-def decodeJWT(token: str) -> dict:
+def decode_jwt(token: str) -> dict:
     try:
         decoded_token = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
         return decoded_token if decoded_token["expires"] >= time.time() else None

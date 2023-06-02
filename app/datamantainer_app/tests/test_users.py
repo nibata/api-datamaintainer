@@ -32,6 +32,7 @@ def test_get_user_nibata_in_id_1():
         "is_active": True
     }
 
+
 def test_create_user():
     json_token = {
         "email": USER_ADMIN,
@@ -51,4 +52,3 @@ def test_create_user():
     response_test = client.post("/users", json=json_insert, headers=headers)
 
     assert response_test.status_code == 200
-

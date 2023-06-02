@@ -9,7 +9,6 @@
                                        |___/                                          
  nibata@gmail.com
 """
-import uvicorn
 
 from fastapi import FastAPI
 

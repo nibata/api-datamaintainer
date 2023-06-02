@@ -19,7 +19,6 @@ class Passwords(Base):
     expiration_date = Column(Date)
     is_active = Column(Boolean, server_default=true(), nullable=False)
 
-
     @staticmethod
     def set_password(pwd: str) -> str:
         """Genera password hasheada mediante método md5

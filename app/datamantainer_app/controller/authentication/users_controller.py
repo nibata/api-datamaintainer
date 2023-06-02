@@ -6,7 +6,6 @@ from .groups_controller import get_groups_by_id_list
 from ...models.authentication import users as model_users
 
  
- 
 def get_user(db: Session, user_id: int):
     return db.query(model_users.Users).filter(model_users.Users.id == user_id).first()
  
