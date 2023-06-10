@@ -36,3 +36,5 @@ Las variables a utilizar son:
  - USER_ADMIN: mail del usuario administrador que se creará en la base de datos una vez creada la tabla de usuarios
  - PASS_ADMIN: password de dicho usuario administrador
  - SENTRY_DNS: Por si se está utilizando SENTRY, acá se debe colocar la DNS entregada por el servicio
+
+Estas variables se pueden configurar ejecutado `python create_env.py` el cual preguntará cuales son los valores que se desean asignar a cada una de las variables o si se usa el valor por defecto.
