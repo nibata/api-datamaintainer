@@ -8,6 +8,8 @@ from ...controller.authentication import users_controller
 from ...controller.authentication import passwords_controller
 from ...schemas.authentication import users_schemas, users_groups_schema
 
+from ...configs.database import SessionLocal
+
 
 router = APIRouter()
 
@@ -48,13 +50,25 @@ async def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_
     return users
  
  
+#@router.get("/users/q",
+#            response_model=users_schemas.User)
+#async def read_user(user_id: int, db: Session = Depends(get_db)):
+#    db_user = users_controller.get_user(db, user_id=user_id)
+#    if db_user is None:
+#        raise HTTPException(status_code=404, detail="User not found")
+#    return db_user
+
 @router.get("/users/q",
             response_model=users_schemas.User)
-async def read_user(user_id: int, db: Session = Depends(get_db)):
-    db_user = users_controller.get_user(db, user_id=user_id)
-    if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return db_user
+async def read_user(user_id: int):
+    async with SessionLocal() as session:
+        async with session.begin():
+            db_user = await users_controller.get_user(session, user_id=user_id)
+
+            if db_user is None:
+                raise HTTPException(status_code=404, detail="User not found")
+            return db_user
+
 
 
 @router.post("/users/assign_role_to_user",

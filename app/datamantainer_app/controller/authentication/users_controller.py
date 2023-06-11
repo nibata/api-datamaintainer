@@ -6,8 +6,13 @@ from .groups_controller import get_groups_by_id_list
 from ...models.authentication import users as model_users
 
  
-def get_user(db: Session, user_id: int):
-    return db.query(model_users.Users).filter(model_users.Users.id == user_id).first()
+#def get_user(db: Session, user_id: int):
+#    return db.query(model_users.Users).filter(model_users.Users.id == user_id).first()
+
+async def get_user(db: Session, user_id: int):
+    rtn = await db.execute(select(model_users.Users).where(model_users.Users.id == user_id))
+
+    return rtn.scalars().first()
  
  
 def get_user_by_email(db: Session, email: str):

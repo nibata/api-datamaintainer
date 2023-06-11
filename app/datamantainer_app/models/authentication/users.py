@@ -4,8 +4,8 @@ from sqlalchemy.orm import relationship, backref
 from sqlalchemy import Boolean, Column, Integer, String, Table, ForeignKey, UniqueConstraint, false
  
 
-# Tabla de relación entre users y groups (muchos a muchos). la documentacion recomienda
-# encarecidamente no realizar esta relacion con un modelo si no que con una tabla directamente
+# Tabla de relación entre users y groups (muchos a muchos). La documentación recomienda
+# encarecidamente no realizar esta relación con un modelo sino que con una tabla directamente
 users_groups = Table('users_groups',
                      Base.metadata,
                      Column('user_id', Integer, ForeignKey('authentication.users.id'), primary_key=True),
