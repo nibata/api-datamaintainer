@@ -5,24 +5,25 @@ from ...schemas.authentication import users_schemas
 from .groups_controller import get_groups_by_id_list
 from ...models.authentication import users as model_users
 
- 
-#def get_user(db: Session, user_id: int):
-#    return db.query(model_users.Users).filter(model_users.Users.id == user_id).first()
 
-async def get_user(db: Session, user_id: int):
-    rtn = await db.execute(select(model_users.Users).where(model_users.Users.id == user_id))
+class UsersController:
+    def __init__(self, session: Session):
+        self.session = session
 
-    return rtn.scalars().first()
- 
- 
+    async def get_user(self, user_id: int):
+        rtn = await self.session.execute(select(model_users.Users).where(model_users.Users.id == user_id))
+
+        return rtn.scalars().first()
+
+    async def get_users(self, skip: int = 0, limit: int = 100):
+        rtn = await self.session.execute(select(model_users.Users).offset(skip).limit(limit))
+
+        return rtn.scalars().all()
+
+
 def get_user_by_email(db: Session, email: str):
     return db.query(model_users.Users).filter(model_users.Users.email == email).first()
- 
- 
-def get_users(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(model_users.Users).offset(skip).limit(limit).all()
- 
- 
+
 def create_user(db: Session, user: users_schemas.UserCreate):
     db_user = model_users.Users(fullname=user.fullname,
                                 email=user.email)

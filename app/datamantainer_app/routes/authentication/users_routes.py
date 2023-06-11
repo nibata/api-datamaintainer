@@ -8,6 +8,8 @@ from ...controller.authentication import users_controller
 from ...controller.authentication import passwords_controller
 from ...schemas.authentication import users_schemas, users_groups_schema
 
+from ...controller.authentication.users_controller import UsersController
+
 from ...configs.database import SessionLocal
 
 
@@ -43,30 +45,35 @@ async def create_user(user: users_schemas.UserCreate, db: Session = Depends(get_
     return user_db
 
  
+#@router.get("/users",
+#            response_model=List[users_schemas.User])
+#async def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+#    users = users_controller.get_users(db, skip=skip, limit=limit)
+#    return users
 @router.get("/users",
             response_model=List[users_schemas.User])
-async def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    users = users_controller.get_users(db, skip=skip, limit=limit)
-    return users
- 
- 
-#@router.get("/users/q",
-#            response_model=users_schemas.User)
-#async def read_user(user_id: int, db: Session = Depends(get_db)):
-#    db_user = users_controller.get_user(db, user_id=user_id)
-#    if db_user is None:
-#        raise HTTPException(status_code=404, detail="User not found")
-#    return db_user
+async def read_users(skip: int = 0, limit: int = 100):
+    async with SessionLocal() as session:
+        async with session.begin():
+            user_controller = UsersController(session)
+            db_users = await user_controller.get_users(skip=skip, limit=limit)
+            session.expunge_all()
+
+            return db_users
 
 @router.get("/users/q",
             response_model=users_schemas.User)
 async def read_user(user_id: int):
     async with SessionLocal() as session:
         async with session.begin():
-            db_user = await users_controller.get_user(session, user_id=user_id)
+            user_controller = UsersController(session)
+            db_user = await user_controller.get_user(user_id=user_id)
 
             if db_user is None:
                 raise HTTPException(status_code=404, detail="User not found")
+
+            session.expunge_all()
+
             return db_user
 
 
