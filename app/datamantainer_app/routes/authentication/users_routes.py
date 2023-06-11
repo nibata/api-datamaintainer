@@ -17,15 +17,19 @@ router = APIRouter()
 
 
 @router.post("/user/login")
-async def user_login(user: users_schemas.UserLogin, db: Session = Depends(get_db)):
-    if users_controller.check_user_password(db=db, user=user):
-        db_user = users_controller.get_user_by_email(db, email=user.email)
-        roles = users_controller.get_groups_from_user(db=db, user_id=db_user.id)
+async def user_login(user: users_schemas.UserLogin):
+    async with SessionLocal() as session:
+        async with session.begin():
+            user_controller = UsersController(session)
+            if await user_controller.check_user_password(user=user):
+                db_user = await user_controller.get_user_by_email(email=user.email)
+                roles = await user_controller.get_groups_from_user(user_id=db_user.id)
 
-        return auth_handler.sign_jwt(user_id=user.email, roles=roles)
-    return {
-        "error": "Wrong login details!"
-    }
+                return auth_handler.sign_jwt(user_id=user.email, roles=roles)
+
+            return {
+                "error": "Wrong login details!"
+            }
 
 
 @router.post("/users",
