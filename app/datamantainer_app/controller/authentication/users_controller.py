@@ -28,7 +28,7 @@ class UsersController:
         password = user.password
         db_user = await self.get_user_by_email(user.email)
         password_controller = PasswordsController(self.session)
-        return password_controller.check_password(db_user.id, password)
+        return await password_controller.check_password(db_user.id, password)
 
     async def get_groups_from_user(self, user_id: int):
         statement = select(model_users.users_groups).where(model_users.users_groups.c.user_id == user_id)
@@ -43,16 +43,14 @@ class UsersController:
 
         return rtn
 
+    async def create_user(self, user: users_schemas.UserCreate):
+        db_user = model_users.Users(fullname=user.fullname,
+                                    email=user.email)
 
-def create_user(db: Session, user: users_schemas.UserCreate):
-    db_user = model_users.Users(fullname=user.fullname,
-                                email=user.email)
-    
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
+        self.session.add(db_user)
+        await self.session.flush()
 
-    return db_user
+        return db_user
 
 
 def assign_role_to_user(db: Session, user_id: int, group_id: int):
