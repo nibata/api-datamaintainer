@@ -122,7 +122,7 @@ def disable_passwords(db: Session, user_id: int) -> int:
     db : Session
         Current SqlAlchemy database session
     user_id : int
-        User that is gonna be disabled
+        User that is going to be disabled
 
     Returns
     -------
