@@ -8,6 +8,7 @@ from ...controller.authentication import users_controller
 from ...schemas.authentication import users_schemas, users_groups_schema
 
 from ...controller.authentication.users_controller import UsersController
+from ...controller.authentication.groups_controller import GroupsController
 from ...controller.authentication.passwords_controller import PasswordsController
 
 from ...configs.database import SessionLocal
@@ -93,15 +94,23 @@ async def read_user(user_id: int):
 
 @router.post("/users/assign_role_to_user",
              dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["ADMINISTRATOR"]))])
-async def assign_role_to_user(user_group: users_groups_schema.UserAssignGroup, db: Session = Depends(get_db)):
-    user_roles = [group.id for group in users_controller.get_groups_from_user(db=db, user_id=user_group.user_id)]
-    user = users_controller.get_user(db=db, user_id=user_group.user_id)
-    
-    if user_group.group_id in user_roles:
-        raise HTTPException(status_code=400, detail="The user is already assigned to this role")
-    
-    elif user is None:
-        raise HTTPException(status_code=400, detail="The user doesn't exists")
-    
-    return users_controller.assign_role_to_user(db=db, user_id=user_group.user_id, group_id=user_group.group_id)
-    
+async def assign_role_to_user(user_group: users_groups_schema.UserAssignGroup):
+    async with SessionLocal() as session:
+        async with session.begin():
+            user_controller = UsersController(session)
+            group_controller = GroupsController(session)
+
+            user_roles = [group.id for group in await user_controller.get_groups_from_user(user_id=user_group.user_id)]
+            user = await user_controller.get_user(user_id=user_group.user_id)
+            group = await group_controller.get_group_by_id(group_id=user_group.group_id)
+
+            if user_group.group_id in user_roles:
+                raise HTTPException(status_code=400, detail="The user is already assigned to this role")
+
+            elif user is None:
+                raise HTTPException(status_code=400, detail="The user doesn't exists")
+
+            elif group is None:
+                raise HTTPException(status_code=400, detail="The role doesn't exists")
+
+            return await user_controller.assign_role_to_user(user_id=user_group.user_id, group_id=user_group.group_id)

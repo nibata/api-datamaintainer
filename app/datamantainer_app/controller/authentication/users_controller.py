@@ -1,10 +1,8 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, insert
-#from .passwords_controller import check_password
-from .passwords_controller import PasswordsController
-from ...schemas.authentication import users_schemas
-#from .groups_controller import get_groups_by_id_list
 from .groups_controller import GroupsController
+from ...schemas.authentication import users_schemas
+from .passwords_controller import PasswordsController
 from ...models.authentication import users as model_users
 
 
@@ -52,14 +50,10 @@ class UsersController:
 
         return db_user
 
+    async def assign_role_to_user(self, user_id: int, group_id: int):
+        statement = insert(model_users.users_groups).values(user_id=user_id, group_id=group_id)
+        await self.session.execute(statement)
+        await self.session.flush()
 
-def assign_role_to_user(db: Session, user_id: int, group_id: int):
-    statement = insert(model_users.users_groups).values(user_id=user_id, group_id=group_id)
-    db.execute(statement)
-    db.commit()
-
-    return {'user_id': user_id,
-            'group_id': group_id}
-
-
-
+        return {'user_id': user_id,
+                'group_id': group_id}

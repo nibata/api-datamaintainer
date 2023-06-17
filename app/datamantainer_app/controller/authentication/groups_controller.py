@@ -13,25 +13,23 @@ class GroupsController:
         rtn = await self.session.execute(select(model_group.Groups).where(model_group.Groups.id.in_(group_ids_list)))
         return rtn.scalars().all()
 
+    async def get_group_by_id(self, group_id: int):
+        rtn = await self.session.execute(select(model_group.Groups).where(model_group.Groups.id == group_id))
+        return rtn.scalars().first()
 
-def get_group_by_id(db: Session, group_id: int):
-    return db.query(model_group.Groups).filter(model_group.Groups.id == group_id).first()
+    async def get_group_by_code(self, code: str):
+        rtn = await self.session.execute(select(model_group.Groups).where(model_group.Groups.code == code))
+        return rtn.scalars().first()
 
+    async def get_groups(self):
+        rtn = await self.session.execute(select(model_group.Groups))
+        return rtn.scalars().all()
 
-def get_group_by_code(db: Session, code: str):
-    return db.query(model_group.Groups).filter(model_group.Groups.code == code).first()
+    async def create_group(self, group: groups_schema.GroupCreate):
+        db_group = model_group.Groups(code=group.code,
+                                      description=group.description)
 
+        self.session.add(db_group)
+        await self.session.flush()
 
-def get_groups(db: Session):
-    return db.query(model_group.Groups).all()
-
-
-def create_group(db: Session, group: groups_schema.GroupCreate):
-    db_group = model_group.Groups(code=group.code,
-                                  description=group.description)
-    
-    db.add(db_group)
-    db.commit()
-    db.refresh(db_group)
-
-    return db_group
+        return db_group
