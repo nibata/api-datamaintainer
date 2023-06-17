@@ -15,7 +15,7 @@ router = APIRouter()
 
 @router.post("/password/create_password",
              response_model=password_schema.PasswordsBase,
-             dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["INSERT"]))])
+             dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["ADMINISTRATOR"]))])
 async def create_password(form_user_pwd: password_schema.CreatePassword):
     async with SessionLocal() as session:
         async with session.begin():
@@ -39,17 +39,27 @@ async def create_password(form_user_pwd: password_schema.CreatePassword):
 
 @router.post("/password/update_password",
              response_model=password_schema.PasswordsBase,
-             dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["INSERT"]))])
-async def update_password(form_user_pwd: password_schema.UpdatePassword, db: Session = Depends(get_db)):
-    db_user = users_controller.get_user_by_email(db, email=form_user_pwd.email)
-    if not db_user:
-        raise HTTPException(status_code=400, detail="Email does not exists")
-    
-    # set password
-    db_password = passwords_controller.update_password(db,
-                                                       db_user.id,
-                                                       form_user_pwd.current_password,
-                                                       form_user_pwd.new_password,
-                                                       form_user_pwd.expiration_date)
+             dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["ADMINISTRATOR", "PERSONAL"]))])
+async def update_password(form_user_pwd: password_schema.UpdatePassword):
+    """
+    TODO: hay un problema lógico a resolver. Este consiste en que un usuario que no tenga permisos INSERT no podrá
+          actualizar su propia clave por lo que hay que crear lógica para eso
+    """
+    async with SessionLocal() as session:
+        async with session.begin():
+            user_controller = UsersController(session)
+            password_controller = PasswordsController(session)
 
-    return db_password
+            db_user = await user_controller.get_user_by_email(email=form_user_pwd.email)
+            if not db_user:
+                raise HTTPException(status_code=400, detail="Email does not exists")
+    
+            # set password
+            db_password = await password_controller.update_password(user_id=db_user.id,
+                                                                    current_password=form_user_pwd.current_password,
+                                                                    new_password=form_user_pwd.new_password,
+                                                                    expiration_date=form_user_pwd.expiration_date)
+
+            session.expunge_all()
+
+            return db_password
