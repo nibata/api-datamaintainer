@@ -43,9 +43,11 @@ def upgrade() -> None:
     admin_code = "ADMINISTRATOR"
     select_code = "SELECT"
     insert_code = "INSERT"
+    default_code = "DEFAULT"
     roles = [{"code": admin_code, "description": "Administrator privileges role"},
              {"code": select_code, "description": "Basic select role"},
-             {"code": insert_code, "description": "Basic insert role"},]
+             {"code": insert_code, "description": "Basic insert role"},
+             {"code": default_code, "description": "Default role"},]
     
     op.bulk_insert(group_table,
                    roles)

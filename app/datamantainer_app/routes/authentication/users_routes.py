@@ -38,7 +38,10 @@ async def create_user(user: users_schemas.UserCreate):
         async with session.begin():
             user_controller = UsersController(session)
             password_controller = PasswordsController(session)
+            group_controller = GroupsController(session)
+
             db_user = await user_controller.get_user_by_email(email=user.email)
+            group_db = await group_controller.get_group_by_code("DEFAULT")
 
             if db_user:
                 raise HTTPException(status_code=400, detail="Email already registered")
@@ -50,6 +53,9 @@ async def create_user(user: users_schemas.UserCreate):
             await password_controller.create_password(user_id=user_db.id,
                                                       password=user.password,
                                                       expiration_date=user.expiration_date)
+
+            await user_controller.assign_role_to_user(user_id=user_db.id,
+                                                      group_id=group_db.id)
 
             # obtengo usuario de base de datos (el objeto user_db no esta linkeado a la session)
             rtn = await user_controller.get_user(user_id=user_db.id)

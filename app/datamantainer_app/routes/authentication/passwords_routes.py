@@ -39,12 +39,10 @@ async def create_password(form_user_pwd: password_schema.CreatePassword):
 
 @router.post("/password/update_password",
              response_model=password_schema.PasswordsBase,
-             dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["ADMINISTRATOR", "PERSONAL"]))])
+             dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["DEFAULT"]))])
 async def update_password(form_user_pwd: password_schema.UpdatePassword):
-    """
-    TODO: hay un problema lógico a resolver. Este consiste en que un usuario que no tenga permisos INSERT no podrá
-          actualizar su propia clave por lo que hay que crear lógica para eso
-    """
+    # Se fuerza que el usuario esté logeado al pedir como dependencia el rol DEFAULT, ya que para que el rol lo tienen
+    # todos los usuarios que han ingresado mediante sus credenciales.
     async with SessionLocal() as session:
         async with session.begin():
             user_controller = UsersController(session)
