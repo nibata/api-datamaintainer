@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 # Se da de alta la base de datos
 if USE_ASYNC:
-    engine = create_async_engine(SQLALCHEMY_DATABASE_URL, pool_pre_ping=True)
+    engine = create_async_engine(SQLALCHEMY_DATABASE_URL, pool_pre_ping=True, poolclass=NullPool)
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, class_=AsyncSession)
 
 else:
