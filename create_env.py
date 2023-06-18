@@ -8,6 +8,7 @@ if __name__ == "__main__":
         ADMIN_EMAIL = input("Enter Admin Email (default.- admin@admin.admin): ") or "admin@admin.admin"
         DEBUG = input("Debug Mode (True or False. default.- True): ") or "True"
         DB_DRIVER = input("Driver DB (default.- 'postgresql'): ") or "postgresql"
+        DB_ASYNC_DRIVER = input("Driver async DataBase (default.- 'asyncpg'): ") or "asyncpg"
         DB_USER = input("DataBase User (default.- postgres): ") or "postgres"
         DB_PASS = input("DataBase Password (default.- postgrspw): ") or "postgrespw"
         DB_HOST = input("DataBase Host (default.- localhost): ") or "localhost"
@@ -33,6 +34,7 @@ if __name__ == "__main__":
         f.write(f"USER_ADMIN={USER_ADMIN}\n")
         f.write(f"PASS_ADMIN={PASS_ADMIN}\n")
         f.write(f"SENTRY_DNS={SENTRY_DNS}\n")
+        f.write(f"DB_ASYNC_DRIVER={DB_ASYNC_DRIVER}\n")
 
         f.close()
 
