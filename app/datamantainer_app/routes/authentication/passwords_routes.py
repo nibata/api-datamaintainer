@@ -1,9 +1,6 @@
-from .. import get_db
 from ...auth import auth_bearer
-from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException
 from ...schemas.authentication import password_schema
-from ...controller.authentication import passwords_controller, users_controller
 from ...controller.authentication.users_controller import UsersController
 from ...controller.authentication.passwords_controller import PasswordsController
 
