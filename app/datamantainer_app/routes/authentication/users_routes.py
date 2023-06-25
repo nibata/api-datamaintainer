@@ -18,15 +18,27 @@ async def user_login(user: users_schemas.UserLogin):
         async with session.begin():
             user_controller = UsersController(session)
             password_match = await user_controller.check_user_password(user=user)
+            user_obj = await user_controller.get_user_by_email(email=user.email)
+            is_user_active = user_obj.is_active
 
-            if password_match:
+            if password_match and is_user_active:
                 db_user = await user_controller.get_user_by_email(email=user.email)
                 roles = await user_controller.get_groups_from_user(user_id=db_user.id)
 
                 return auth_handler.sign_jwt(user_id=user.email, roles=roles)
 
+            if not password_match:
+                return {
+                    "error": "Wrong login details"
+                }
+
+            if not is_user_active:
+                return {
+                    "error": "User is not longer active"
+                }
+
             return {
-                "error": "Wrong login details!"
+                "error": "error"
             }
 
 
