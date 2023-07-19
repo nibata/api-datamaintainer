@@ -19,26 +19,23 @@ async def user_login(user: users_schemas.UserLogin):
             user_controller = UsersController(session)
             password_match = await user_controller.check_user_password(user=user)
             user_obj = await user_controller.get_user_by_email(email=user.email)
-            is_user_active = user_obj.is_active
 
-            if password_match and is_user_active:
-                db_user = await user_controller.get_user_by_email(email=user.email)
-                roles = await user_controller.get_groups_from_user(user_id=db_user.id)
+            if user_obj is not None and password_match:
+                is_user_active = user_obj.is_active
 
-                return auth_handler.sign_jwt(user_id=user.email, roles=roles)
+                if password_match and is_user_active:
+                    db_user = await user_controller.get_user_by_email(email=user.email)
+                    roles = await user_controller.get_groups_from_user(user_id=db_user.id)
 
-            if not password_match:
-                return {
-                    "error": "Wrong login details"
-                }
+                    return auth_handler.sign_jwt(user_id=user.email, roles=roles)
 
-            if not is_user_active:
-                return {
-                    "error": "User is not longer active"
-                }
+                if not is_user_active:
+                    return {
+                        "error": "User is not longer active"
+                    }
 
             return {
-                "error": "error"
+                "error": "Wrong login details"
             }
 
 
@@ -91,18 +88,33 @@ async def read_users(skip: int = 0, limit: int = 100):
 
 @router.get("/users/q",
             response_model=users_schemas.User)
-async def read_user(user_id: int):
+async def read_user(user_id: int | None = None, user_email: str | None = None):
     async with SessionLocal() as session:
         async with session.begin():
-            user_controller = UsersController(session)
-            db_user = await user_controller.get_user(user_id=user_id)
+            if user_id is not None:
+                user_controller = UsersController(session)
+                db_user = await user_controller.get_user(user_id=user_id)
 
-            if db_user is None:
-                raise HTTPException(status_code=404, detail="User not found")
+                if db_user is None:
+                    raise HTTPException(status_code=404, detail="User not found")
 
-            session.expunge_all()
+                session.expunge_all()
 
-            return db_user
+                return db_user
+
+            elif user_email is not None:
+                user_controller = UsersController(session)
+                db_user = await user_controller.get_user_by_email(email=user_email)
+
+                if db_user is None:
+                    raise HTTPException(status_code=404, detail="User not found")
+
+                session.expunge_all()
+
+                return db_user
+
+            else:
+                raise HTTPException(status_code=404, detail="Not given user")
 
 
 @router.post("/users/assign_role_to_user",

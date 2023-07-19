@@ -25,7 +25,12 @@ class UsersController:
     async def check_user_password(self, user: users_schemas.UserLogin):
         password = user.password
         db_user = await self.get_user_by_email(user.email)
+
+        if db_user is None:
+            return False
+
         password_controller = PasswordsController(self.session)
+
         return await password_controller.check_password(db_user.id, password)
 
     async def get_groups_from_user(self, user_id: int):
