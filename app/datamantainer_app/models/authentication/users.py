@@ -1,8 +1,7 @@
-import hashlib
 from ...configs.database import Base
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy import Boolean, Column, Integer, String, Table, ForeignKey, UniqueConstraint, false
- 
+
 
 # Tabla de relación entre users y groups (muchos a muchos). La documentación recomienda
 # encarecidamente no realizar esta relación con un modelo sino que con una tabla directamente
