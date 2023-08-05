@@ -9,7 +9,7 @@ class GroupsController:
         self.session = session
 
     async def get_groups_by_id_list(self, group_ids_list: List):
-        rtn = await self.session.execute(select(model_group.Group).where(model_group.Group.Id in group_ids_list))
+        rtn = await self.session.execute(select(model_group.Group).where(model_group.Group.Id.in_(group_ids_list)))
         return rtn.scalars().all()
 
     async def get_group_by_id(self, group_id: int):

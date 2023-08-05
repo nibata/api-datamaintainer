@@ -2,7 +2,6 @@ from ...models.authentication import users_groups as model_user_group_link
 from ...models.authentication import users as model_users
 from sqlmodel.ext.asyncio.session import AsyncSession
 from .passwords_controller import PasswordsController
-from ...schemas.authentication import users_schemas
 from .groups_controller import GroupsController
 from sqlmodel import select, insert
 
@@ -48,9 +47,9 @@ class UsersController:
 
         return rtn
 
-    async def create_user(self, user: users_schemas.UserCreate):
-        db_user = model_users.UserCreate(FullName=user.fullname,
-                                         Email=user.email)
+    async def create_user(self, user: model_users.UserCreate):
+        db_user = model_users.User(FullName=user.FullName,
+                                   Email=user.Email)
 
         self.session.add(db_user)
         await self.session.flush()
