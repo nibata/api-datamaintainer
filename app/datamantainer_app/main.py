@@ -12,20 +12,20 @@
 
 from fastapi import FastAPI
 
-# from .configs.sentry import *
+from .configs.sentry import *
 from .configs import settings
-# from .routes.default import default_routes
-# from .routes.authentication import users_routes, groups_routes, passwords_routes
-from .routes import testrouter
+from .routes.default import default_routes
+from .routes.authentication import users_routes, groups_routes, passwords_routes
+# from .routes import testrouter
 
 app = FastAPI(
         title=settings.APP_NAME,
         description=settings.DESCRIPTION
 )
 
-#app.include_router(users_routes.router)
-#app.include_router(default_routes.router)
-#app.include_router(groups_routes.router)
-#app.include_router(passwords_routes.router)
-app.include_router(testrouter.router)
+app.include_router(users_routes.router)
+app.include_router(default_routes.router)
+app.include_router(groups_routes.router)
+app.include_router(passwords_routes.router)
+# app.include_router(testrouter.router)
 
