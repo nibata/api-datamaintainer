@@ -1,5 +1,5 @@
-import sentry_sdk
 from .settings import SENTRY_DNS
+import sentry_sdk
 
 
 sentry_sdk.init(

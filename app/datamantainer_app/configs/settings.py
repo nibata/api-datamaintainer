@@ -1,9 +1,9 @@
 """
 Se deja la configuración inicial de la aplicación y se cargan las variables de entorno.
 """
-import os
-import inspect
 from dotenv import load_dotenv
+import inspect
+import os
 
 
 current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))

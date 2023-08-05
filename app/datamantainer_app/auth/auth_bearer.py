@@ -1,7 +1,7 @@
-from typing import List
-from .auth_handler import decode_jwt
-from fastapi import Request, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import Request, HTTPException
+from .auth_handler import decode_jwt
+from typing import List
 
 
 class JWTBearer(HTTPBearer):

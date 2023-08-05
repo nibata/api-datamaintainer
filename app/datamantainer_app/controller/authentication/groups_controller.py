@@ -1,33 +1,32 @@
-from typing import List
-from sqlalchemy import select
-from sqlalchemy.orm import Session
-from ...schemas.authentication import groups_schema
 from ...models.authentication import groups as model_group
- 
+from sqlmodel.ext.asyncio.session import AsyncSession
+from sqlalchemy import select
+from typing import List
+
 
 class GroupsController:
-    def __init__(self, session: Session):
+    def __init__(self, session: AsyncSession):
         self.session = session
 
     async def get_groups_by_id_list(self, group_ids_list: List):
-        rtn = await self.session.execute(select(model_group.Groups).where(model_group.Groups.id.in_(group_ids_list)))
+        rtn = await self.session.execute(select(model_group.Group).where(model_group.Group.Id in group_ids_list))
         return rtn.scalars().all()
 
     async def get_group_by_id(self, group_id: int):
-        rtn = await self.session.execute(select(model_group.Groups).where(model_group.Groups.id == group_id))
+        rtn = await self.session.execute(select(model_group.Group).where(model_group.Group.Id == group_id))
         return rtn.scalars().first()
 
     async def get_group_by_code(self, code: str):
-        rtn = await self.session.execute(select(model_group.Groups).where(model_group.Groups.code == code))
+        rtn = await self.session.execute(select(model_group.Group).where(model_group.Group.Code == code))
         return rtn.scalars().first()
 
     async def get_groups(self):
-        rtn = await self.session.execute(select(model_group.Groups))
+        rtn = await self.session.execute(select(model_group.Group))
         return rtn.scalars().all()
 
-    async def create_group(self, group: groups_schema.GroupCreate):
-        db_group = model_group.Groups(code=group.code,
-                                      description=group.description)
+    async def create_group(self, group: model_group.GroupCreate):
+        db_group = model_group.Group(Code=group.Code,
+                                     Description=group.Description)
 
         self.session.add(db_group)
         await self.session.flush()

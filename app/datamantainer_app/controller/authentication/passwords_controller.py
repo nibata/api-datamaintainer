@@ -1,12 +1,12 @@
-from datetime import date
-from fastapi import HTTPException
-from sqlalchemy.orm import Session
-from sqlalchemy import select
 from ...models.authentication import passwords as model_password
+from sqlmodel.ext.asyncio.session import AsyncSession
+from fastapi import HTTPException
+from sqlmodel import select
+from datetime import date
 
 
 class PasswordsController:
-    def __init__(self, session: Session):
+    def __init__(self, session: AsyncSession):
         self.session = session
 
     async def get_active_password(self, user_id: int) -> str:
@@ -23,13 +23,13 @@ class PasswordsController:
             Current active password
         """
 
-        password = await self.session.execute(select(model_password.Passwords).
-                                              where(model_password.Passwords.user_id == user_id,
-                                                    model_password.Passwords.is_active == True))
+        password = await self.session.execute(select(model_password.Password).
+                                              where(model_password.Password.UserId == user_id,
+                                                    model_password.Password.IsActive))
 
         password = password.scalars().first()
 
-        return password.hashed_password
+        return password.HashedPassword
 
     async def check_password(self, user_id: int, password_to_check: str) -> bool:
         """Check if the passed password is equal to the active password registered in database
@@ -48,12 +48,12 @@ class PasswordsController:
         """
 
         current_active_password = await self.get_active_password(user_id)
-        hashed_password_to_check = model_password.Passwords.set_password(password_to_check)
+        hashed_password_to_check = model_password.Password.set_password(password_to_check)
 
         return current_active_password == hashed_password_to_check
 
     async def create_password(self, user_id: int, password: str,
-                              expiration_date: date = None) -> model_password.Passwords:
+                              expiration_date: date = None) -> model_password.Password:
         """Create a password only if there is no active password for the current user
 
         Parameters
@@ -76,11 +76,11 @@ class PasswordsController:
                                 detail="there is already an active password. Use update_password method instead of "
                                        "create_password method")
 
-        hashed_password = model_password.Passwords.set_password(password)
+        hashed_password = model_password.Password.set_password(password)
 
-        db_password = model_password.Passwords(user_id=user_id,
-                                               hashed_password=hashed_password,
-                                               expiration_date=expiration_date)
+        db_password = model_password.Password(UserId=user_id,
+                                              HashedPassword=hashed_password,
+                                              ExpirationDate=expiration_date)
 
         self.session.add(db_password)
 
@@ -105,16 +105,16 @@ class PasswordsController:
             True if the user has an active password, False other way
         """
 
-        rtn = await self.session.execute(select(model_password.Passwords).where(
-            model_password.Passwords.user_id == user_id,
-            model_password.Passwords.is_active == True))
+        rtn = await self.session.execute(select(model_password.Password).where(
+            model_password.Password.UserId == user_id,
+            model_password.Password.IsActive))
 
         rtn = rtn.scalars().first()
 
         return rtn is not None
 
     async def update_password(self, user_id: int, current_password: str, new_password: str,
-                              expiration_date: date = None) -> model_password.Passwords:
+                              expiration_date: date = None) -> model_password.Password:
         """ Update the current password for the user
 
         Parameters
@@ -164,9 +164,9 @@ class PasswordsController:
         int
             User's id that is disabled
         """
-        password = await self.session.execute(select(model_password.Passwords).
-                                              where(model_password.Passwords.user_id == user_id,
-                                                    model_password.Passwords.is_active == True))
+        password = await self.session.execute(select(model_password.Password).
+                                              where(model_password.Password.UserId == user_id,
+                                                    model_password.Password.IsActive))
         passwords = password.scalars().all()
 
         for pwd in passwords:

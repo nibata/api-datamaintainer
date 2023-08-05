@@ -33,14 +33,14 @@ def upgrade() -> None:
     table_user = op.create_table('User',
                                  sa.Column('FullName', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
                                  sa.Column('Email', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-                                 sa.Column('IsActive', sa.Boolean(), nullable=False),
+                                 sa.Column('IsActive', sa.Boolean(), server_default=sa.text('false'), nullable=False),
                                  sa.Column('Id', sa.Integer(), nullable=False),
                                  sa.PrimaryKeyConstraint('Id'),
                                  schema='Authentication')
 
     table_passwors = op.create_table('Password',
                                      sa.Column('CreationDate', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
-                                     sa.Column('IsActive', sa.Boolean(), nullable=False),
+                                     sa.Column('IsActive', sa.Boolean(), server_default=sa.text('true'), nullable=False),
                                      sa.Column('ExpirationDate', sa.Date(), nullable=True),
                                      sa.Column('Id', sa.Integer(), nullable=False),
                                      sa.Column('UserId', sa.Integer(), nullable=False),

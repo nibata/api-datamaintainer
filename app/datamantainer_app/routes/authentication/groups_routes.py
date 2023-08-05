@@ -1,21 +1,21 @@
-from ...auth import auth_bearer
-from ...configs.database import SessionLocal
-from ...schemas.authentication import groups_schema
-from fastapi import APIRouter, Depends, HTTPException
 from ...controller.authentication.groups_controller import GroupsController
+from ...models.authentication.groups import GroupRead, GroupCreate
+from fastapi import APIRouter, Depends, HTTPException
+from ...configs.database import SessionLocal
+from ...auth import auth_bearer
 
 
 router = APIRouter()
 
 
 @router.post("/groups",
-             response_model=groups_schema.Group,
+             response_model=GroupRead,
              dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["ADMINISTRATOR"]))])
-async def create_group(group: groups_schema.GroupCreate):
+async def create_group(group: GroupCreate):
     async with SessionLocal() as session:
         async with session.begin():
             group_controller = GroupsController(session)
-            db_group = await group_controller.get_group_by_code(code=group.code)
+            db_group = await group_controller.get_group_by_code(code=group.Code)
 
             if db_group:
                 raise HTTPException(status_code=400, detail="Group already Exists")

@@ -42,4 +42,22 @@ class Password(PasswordBase, table=True):
         password = hashlib.md5(password_to_hash.encode()).hexdigest()
 
         return password
-    
+
+
+class PasswordRead(SQLModel):
+    Email: str
+    IsActive: bool
+    ExpirationDate: date
+
+
+class PasswordUpdate(SQLModel):
+    Email: str = Field(nullable=False, regex="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$")
+    CurrentPassword: str = Field(nullable=False)
+    NewPassword: str = Field(nullable=False)
+    ExpirationDate: date = Field(nullable=True)
+
+
+class PasswordCreate(SQLModel):
+    Email: str = Field(nullable=False, regex="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$")
+    password: str = Field(nullable=False)
+    expiration_date: date = Field(nullable=True)

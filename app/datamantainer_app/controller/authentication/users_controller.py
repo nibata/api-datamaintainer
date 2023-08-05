@@ -1,45 +1,47 @@
-from sqlalchemy.orm import Session
-from sqlalchemy import select, insert
-from .groups_controller import GroupsController
-from ...schemas.authentication import users_schemas
-from .passwords_controller import PasswordsController
+from ...models.authentication import users_groups as model_user_group_link
 from ...models.authentication import users as model_users
+from sqlmodel.ext.asyncio.session import AsyncSession
+from .passwords_controller import PasswordsController
+from ...schemas.authentication import users_schemas
+from .groups_controller import GroupsController
+from sqlmodel import select, insert
 
 
 class UsersController:
-    def __init__(self, session: Session):
+    def __init__(self, session: AsyncSession):
         self.session = session
 
     async def get_user(self, user_id: int):
-        rtn = await self.session.execute(select(model_users.Users).where(model_users.Users.id == user_id))
+        rtn = await self.session.execute(select(model_users.User).where(model_users.User.Id == user_id))
         return rtn.scalars().first()
 
     async def get_users(self, skip: int = 0, limit: int = 100):
-        rtn = await self.session.execute(select(model_users.Users).offset(skip).limit(limit))
+        rtn = await self.session.execute(select(model_users.User).offset(skip).limit(limit))
         return rtn.scalars().all()
 
     async def get_user_by_email(self, email: str):
-        rtn = await self.session.execute(select(model_users.Users).where(model_users.Users.email == email))
+        rtn = await self.session.execute(select(model_users.User).where(model_users.User.Email == email))
         return rtn.scalars().first()
 
-    async def check_user_password(self, user: users_schemas.UserLogin):
-        password = user.password
-        db_user = await self.get_user_by_email(user.email)
+    async def check_user_password(self, user: model_users.UserLogin):
+        password = user.Password
+        db_user = await self.get_user_by_email(user.Email)
 
         if db_user is None:
             return False
 
         password_controller = PasswordsController(self.session)
 
-        return await password_controller.check_password(db_user.id, password)
+        return await password_controller.check_password(db_user.Id, password)
 
     async def get_groups_from_user(self, user_id: int):
-        statement = select(model_users.users_groups).where(model_users.users_groups.c.user_id == user_id)
+        statement = (select(model_user_group_link.UserGroupLink).
+                     where(model_user_group_link.UserGroupLink.UserId == user_id))
 
         groups = await self.session.execute(statement)
         groups = groups.all()
 
-        groups_list = [group["group_id"] for group in groups]
+        groups_list = [group[0].GroupId for group in groups]
 
         group_controller = GroupsController(self.session)
         rtn = await group_controller.get_groups_by_id_list(groups_list)
@@ -47,8 +49,8 @@ class UsersController:
         return rtn
 
     async def create_user(self, user: users_schemas.UserCreate):
-        db_user = model_users.Users(fullname=user.fullname,
-                                    email=user.email)
+        db_user = model_users.UserCreate(FullName=user.fullname,
+                                         Email=user.email)
 
         self.session.add(db_user)
         await self.session.flush()
@@ -56,9 +58,9 @@ class UsersController:
         return db_user
 
     async def assign_role_to_user(self, user_id: int, group_id: int):
-        statement = insert(model_users.users_groups).values(user_id=user_id, group_id=group_id)
+        statement = insert(model_user_group_link.UserGroupLink).values(UserId=user_id, GroupId=group_id)
         await self.session.execute(statement)
         await self.session.flush()
 
-        return {'user_id': user_id,
-                'group_id': group_id}
+        return {'UserId': user_id,
+                'GroupId': group_id}

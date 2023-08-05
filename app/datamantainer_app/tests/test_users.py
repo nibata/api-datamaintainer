@@ -1,7 +1,7 @@
-import pytest
-from ..main import app
-from httpx import AsyncClient
 from ..configs.settings import USER_ADMIN, PASS_ADMIN
+from httpx import AsyncClient
+from ..main import app
+import pytest
 
 
 @pytest.fixture
