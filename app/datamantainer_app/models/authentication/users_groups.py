@@ -5,7 +5,8 @@ from .users import User
 
 class UserGroupLink(SQLModel, table=True):
     __tablename__ = "UserGroupLink"
-    __table_args__ = (UniqueConstraint("UserId", "GroupId"), {"schema": "Authentication"})
+    __table_args__ = {"schema": "Authentication"}
+    #__table_args__ = (UniqueConstraint("UserId", "GroupId"), {"schema": "Authentication"})
 
     # Fields
     UserId: int = Field(foreign_key=User.Id, primary_key=True)

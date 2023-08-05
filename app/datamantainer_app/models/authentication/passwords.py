@@ -1,23 +1,26 @@
-import hashlib
-from ...configs.database import Base
 from ...configs.settings import SECRET_KEY
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Boolean, true, sql, Date
+from sqlmodel import SQLModel, Field
+from datetime import datetime, date
+from .users import User
+import hashlib
 
-from .users import Users
- 
- 
-class Passwords(Base):
+
+class PasswordBase(SQLModel):
+    CreationDate: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    IsActive: bool = Field(nullable=False, default=True)
+    ExpirationDate: date = Field(nullable=True)
+
+
+class Password(PasswordBase, table=True):
     """Password Class contains standard information for a Passwords for users."""
  
-    __tablename__ = "passwords"
-    __table_args__ = {"schema": "authentication"}
+    __tablename__ = "Password"
+    __table_args__ = {"schema": "Authentication"}
 
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey(Users.id), nullable=False)
-    hashed_password = Column(String(120), nullable=False)
-    creation_date = Column(DateTime, server_default=sql.func.now(), nullable=False)
-    expiration_date = Column(Date)
-    is_active = Column(Boolean, server_default=true(), nullable=False)
+    Id: int = Field(primary_key=True, nullable=False)
+    UserId: int = Field(foreign_key=User.Id)
+    HashedPassword: str = Field(nullable=False, max_length=120)
+
 
     @staticmethod
     def set_password(pwd: str) -> str:
