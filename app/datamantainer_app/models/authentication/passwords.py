@@ -4,6 +4,7 @@ from datetime import datetime, date
 from .users import User
 import hashlib
 
+from pydantic import EmailStr
 
 class PasswordBase(SQLModel):
     CreationDate: datetime = Field(default_factory=datetime.utcnow, nullable=False)
@@ -51,13 +52,13 @@ class PasswordRead(SQLModel):
 
 
 class PasswordUpdate(SQLModel):
-    Email: str = Field(nullable=False, regex="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$")
+    Email: EmailStr = Field(nullable=False)
     CurrentPassword: str = Field(nullable=False)
     NewPassword: str = Field(nullable=False)
     ExpirationDate: date = Field(nullable=True)
 
 
 class PasswordCreate(SQLModel):
-    Email: str = Field(nullable=False, regex="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$")
+    Email: EmailStr = Field(nullable=False)
     password: str = Field(nullable=False)
     expiration_date: date = Field(nullable=True)

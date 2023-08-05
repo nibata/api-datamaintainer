@@ -3,6 +3,8 @@ from typing import TYPE_CHECKING
 from datetime import date
 from typing import List
 
+from pydantic import EmailStr
+
 
 if TYPE_CHECKING:
     from .users_groups import UserGroupLink
@@ -11,7 +13,7 @@ if TYPE_CHECKING:
 # BASE
 class UserBase(SQLModel):
     FullName: str = Field(nullable=False, regex="^[a-zA-Z0-9äöüÄÖÜáéíóúÁÉÍÓÚ ]*$")
-    Email: str = Field(nullable=False, regex="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$")
+    Email: EmailStr = Field(nullable=False)
 
 
 # TABLES
@@ -35,5 +37,5 @@ class UserCreate(UserBase):
 
 
 class UserLogin(SQLModel):
-    Email: str = Field(nullable=False, regex="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$")
+    Email: EmailStr = Field(nullable=False)
     Password: str = Field(nullable=False)
