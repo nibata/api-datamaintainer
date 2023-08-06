@@ -1,7 +1,7 @@
 from sqlmodel import Field, Relationship, SQLModel
 from typing import TYPE_CHECKING
 from datetime import date
-from typing import List
+from typing import List, Optional
 
 from pydantic import EmailStr
 
@@ -33,7 +33,7 @@ class User(UserBase, table=True):
 
 class UserCreate(UserBase):
     Password: str = Field(nullable=False)
-    ExpirationDate: date = Field(nullable=True)
+    ExpirationDate: Optional[date] = None
 
 
 class UserLogin(SQLModel):

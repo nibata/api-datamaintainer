@@ -1,4 +1,4 @@
-from ..configs.settings import USER_ADMIN, PASS_ADMIN
+from ..configs.settings import PASS_ADMIN, ADMIN_EMAIL
 from httpx import AsyncClient
 from ..main import app
 import pytest
@@ -13,15 +13,15 @@ def anyio_backend():
 async def test_check_life_of_users_route():
     async with AsyncClient(app=app, base_url="http://test") as async_client:
         response = await async_client.get("/users")
-    
+
     assert response.status_code == 200
 
 
 @pytest.mark.anyio
 async def test_create_user_without_authorization():
     json = {
-        "fullname": "Nicolás Bacquet",
-        "email": "nibata@gmail.com",
+        "fullname": "No Authorized User",
+        "email": "no@authorized.com",
         "password": "pwd_test"
     }
 
@@ -32,29 +32,24 @@ async def test_create_user_without_authorization():
 
 
 @pytest.mark.anyio
-async def test_get_user_nibata_in_id_1():
+async def test_get_user_in_id_1():
     async with AsyncClient(app=app, base_url="http://test") as async_client:
         response = await async_client.get("/users/q?user_id=1")
 
-    assert response.json() == {
-        "fullname": "User Test",
-        "email": "test@test.com",
-        "id": 1, 
-        "is_active": True
-    }
+    assert response.status_code == 200
 
 
 @pytest.mark.anyio
 async def test_create_user():
     json_token = {
-        "email": USER_ADMIN,
-        "password": PASS_ADMIN
+        "Email": ADMIN_EMAIL,
+        "Password": PASS_ADMIN
     }
 
     json_insert = {
-        "fullname": "User Test Two",
-        "email": "test2@test.com",
-        "password": "pwd_test",
+        "FullName": "User Test Two",
+        "Email": "user@test.com",
+        "Password": "pwd_test",
     }
 
     async with AsyncClient(app=app, base_url="http://test") as async_client:

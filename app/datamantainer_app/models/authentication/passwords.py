@@ -1,6 +1,7 @@
 from ...configs.settings import SECRET_KEY
 from sqlmodel import SQLModel, Field
 from datetime import datetime, date
+from typing import Optional
 from .users import User
 import hashlib
 
@@ -10,7 +11,7 @@ from pydantic import EmailStr
 class PasswordBase(SQLModel):
     CreationDate: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     IsActive: bool = Field(nullable=False, default=True)
-    ExpirationDate: date = Field(nullable=True)
+    ExpirationDate: Optional[date] = Field(nullable=True)
 
 
 class Password(PasswordBase, table=True):
@@ -56,10 +57,10 @@ class PasswordUpdate(SQLModel):
     Email: EmailStr = Field(nullable=False)
     CurrentPassword: str = Field(nullable=False)
     NewPassword: str = Field(nullable=False)
-    ExpirationDate: date = Field(nullable=True)
+    ExpirationDate: Optional[date] = None
 
 
 class PasswordCreate(SQLModel):
     Email: EmailStr = Field(nullable=False)
     Password: str = Field(nullable=False)
-    ExpirationDate: date = Field(nullable=True)
+    ExpirationDate: Optional[date] = None
