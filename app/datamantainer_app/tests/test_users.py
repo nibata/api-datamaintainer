@@ -46,6 +46,14 @@ async def test_create_user():
         "Password": PASS_ADMIN
     }
 
+    print("#" * 10)
+    print("#" * 10)
+    print("#" * 10)
+    print(ADMIN_EMAIL, PASS_ADMIN)
+    print("#" * 10)
+    print("#" * 10)
+    print("#" * 10)
+
     json_insert = {
         "FullName": "User Test Two",
         "Email": "user@test.com",
