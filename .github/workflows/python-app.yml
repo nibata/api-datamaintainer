@@ -1,4 +1,3 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
 name: API Workflow
@@ -59,8 +58,9 @@ jobs:
         DB_PORT: 5432
         DB_DATABASE_NAME: FastAPI_DB  
         SECRET_KEY: "WELL... NOTHING NEW, JUST THINKING ABOUT SECRETS"  
-        USER_ADMIN: ${{ secrets.MAIL_TEST }}
+        ADMIN_EMAIL: ${{ secrets.MAIL_TEST }}
         PASS_ADMIN: ${{ secrets.PASSWORD_TEST }}
+        USER_ADMIN: ${{ secrets.USER_TEST }}
 
     - name: Unit Test
       run: pytest --junitxml=res-test.xml

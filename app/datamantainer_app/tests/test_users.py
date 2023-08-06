@@ -37,8 +37,8 @@ async def test_get_user_nibata_in_id_1():
         response = await async_client.get("/users/q?user_id=1")
 
     assert response.json() == {
-        "fullname": "Nicolás Bacquet",
-        "email": "nibata@gmail.com", 
+        "fullname": "User Test",
+        "email": "test@test.com",
         "id": 1, 
         "is_active": True
     }
@@ -52,8 +52,8 @@ async def test_create_user():
     }
 
     json_insert = {
-        "fullname": "test",
-        "email": "test@test.test",
+        "fullname": "User Test Two",
+        "email": "test2@test.com",
         "password": "pwd_test",
     }
 
