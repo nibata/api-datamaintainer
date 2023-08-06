@@ -2,6 +2,7 @@ from sqlmodel import SQLModel, Field, Relationship
 from typing import TYPE_CHECKING
 from typing import List
 
+
 if TYPE_CHECKING:
     from .users_groups import UserGroupLink
 

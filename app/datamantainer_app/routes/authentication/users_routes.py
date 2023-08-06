@@ -75,13 +75,13 @@ async def create_user(user: UserCreate):
             return rtn
 
 
-@router.get("/users",
-            response_model=List[User])
+@router.get("/users", response_model=List[User])
 async def read_users(skip: int = 0, limit: int = 100):
     async with SessionLocal() as session:
         async with session.begin():
             user_controller = UsersController(session)
             db_users = await user_controller.get_users(skip=skip, limit=limit)
+
             session.expunge_all()
 
             return db_users
@@ -126,7 +126,7 @@ async def assign_role_to_user(user_group: UserGroupLink):
             user_controller = UsersController(session)
             group_controller = GroupsController(session)
 
-            user_roles = [group.id for group in await user_controller.get_groups_from_user(user_id=user_group.UserId)]
+            user_roles = [group.Id for group in await user_controller.get_groups_from_user(user_id=user_group.UserId)]
             user = await user_controller.get_user(user_id=user_group.UserId)
             group = await group_controller.get_group_by_id(group_id=user_group.GroupId)
 

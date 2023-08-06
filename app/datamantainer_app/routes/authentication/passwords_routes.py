@@ -24,9 +24,9 @@ async def create_password(form_user_pwd: PasswordCreate):
                 raise HTTPException(status_code=400, detail="Email does not exists")
     
             # set password
-            db_password = await password_controller.create_password(user_id=db_user.id,
-                                                                    password=form_user_pwd.password,
-                                                                    expiration_date=form_user_pwd.expiration_date)
+            db_password = await password_controller.create_password(user_id=db_user.Id,
+                                                                    password=form_user_pwd.Password,
+                                                                    expiration_date=form_user_pwd.ExpirationDate)
 
             session.expunge_all()
 

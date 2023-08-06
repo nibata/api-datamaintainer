@@ -170,7 +170,7 @@ class PasswordsController:
         passwords = password.scalars().all()
 
         for pwd in passwords:
-            pwd.is_active = False
+            pwd.IsActive = False
 
         await self.session.flush()
 

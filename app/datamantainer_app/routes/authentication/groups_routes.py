@@ -22,7 +22,7 @@ async def create_group(group: GroupCreate):
 
             group_db = await group_controller.create_group(group=group)
 
-            rtn = await group_controller.get_group_by_id(group_id=group_db.id)
+            rtn = await group_controller.get_group_by_id(group_id=group_db.Id)
 
             session.expunge_all()
 

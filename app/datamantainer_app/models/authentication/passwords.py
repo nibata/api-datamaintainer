@@ -6,6 +6,7 @@ import hashlib
 
 from pydantic import EmailStr
 
+
 class PasswordBase(SQLModel):
     CreationDate: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     IsActive: bool = Field(nullable=False, default=True)
@@ -46,7 +47,7 @@ class Password(PasswordBase, table=True):
 
 
 class PasswordRead(SQLModel):
-    Email: str
+    UserId: int
     IsActive: bool
     ExpirationDate: date
 
@@ -60,5 +61,5 @@ class PasswordUpdate(SQLModel):
 
 class PasswordCreate(SQLModel):
     Email: EmailStr = Field(nullable=False)
-    password: str = Field(nullable=False)
-    expiration_date: date = Field(nullable=True)
+    Password: str = Field(nullable=False)
+    ExpirationDate: date = Field(nullable=True)
