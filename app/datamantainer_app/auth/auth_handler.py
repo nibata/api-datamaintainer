@@ -1,5 +1,5 @@
 from ..models.authentication.groups import Group
-from ..modules.encrypter import Encrypter
+from ..modules.encrypter_module import Encrypter
 from ..configs import settings
 from typing import Dict, List
 import time
