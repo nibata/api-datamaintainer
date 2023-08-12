@@ -61,6 +61,7 @@ jobs:
         ADMIN_EMAIL: ${{ secrets.MAIL_TEST }}
         PASS_ADMIN: ${{ secrets.PASSWORD_TEST }}
         USER_ADMIN: ${{ secrets.USER_TEST }}
+        CRYPTO_KEY: ${{ secrets.CRYPTO_KEY_TEST}}
 
     - name: Unit Test
       run: pytest --junitxml=res-test.xml
