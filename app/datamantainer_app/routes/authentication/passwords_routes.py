@@ -2,9 +2,8 @@ from ...models.authentication.passwords import PasswordRead, PasswordCreate, Pas
 from ...controller.authentication.passwords_controller import PasswordsController
 from ...controller.authentication.users_controller import UsersController
 from fastapi import APIRouter, Depends, HTTPException
-#from ...configs.database import SessionLocal
-from ...configs.database import get_session
 from sqlmodel.ext.asyncio.session import AsyncSession
+from ...configs.database import get_session
 from ...auth import auth_bearer
 
 

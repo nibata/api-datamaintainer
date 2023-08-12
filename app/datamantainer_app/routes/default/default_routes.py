@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
 from ...controller.default.default_controller import test_sentry
+from fastapi import APIRouter
 
 
 router = APIRouter()

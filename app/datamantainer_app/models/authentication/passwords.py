@@ -1,11 +1,10 @@
 from ...configs.settings import SECRET_KEY
 from sqlmodel import SQLModel, Field
 from datetime import datetime, date
+from pydantic import EmailStr
 from typing import Optional
 from .users import User
 import hashlib
-
-from pydantic import EmailStr
 
 
 class PasswordBase(SQLModel):

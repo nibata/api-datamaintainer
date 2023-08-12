@@ -1,9 +1,8 @@
 from ...controller.authentication.groups_controller import GroupsController
 from ...models.authentication.groups import GroupRead, GroupCreate
 from fastapi import APIRouter, Depends, HTTPException
-#from ...configs.database import SessionLocal
-from ...configs.database import get_session
 from sqlmodel.ext.asyncio.session import AsyncSession
+from ...configs.database import get_session
 from ...auth import auth_bearer
 
 

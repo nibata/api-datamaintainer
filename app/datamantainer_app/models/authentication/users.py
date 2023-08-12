@@ -1,9 +1,8 @@
 from sqlmodel import Field, Relationship, SQLModel
 from typing import TYPE_CHECKING
-from datetime import date
 from typing import List, Optional
-
 from pydantic import EmailStr
+from datetime import date
 
 
 if TYPE_CHECKING:

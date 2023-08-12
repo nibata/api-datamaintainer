@@ -1,8 +1,9 @@
-import jwt
-import time
-from typing import Dict, List
-from ..configs import settings
 from ..models.authentication.groups import Group
+from ..modules.encrypter import Encrypter
+from ..configs import settings
+from typing import Dict, List
+import time
+import jwt
 
 
 JWT_SECRET = settings.JWT_SECRET
@@ -16,12 +17,20 @@ def token_response(token: str):
 
 
 def sign_jwt(user_id: str, roles: List[Group]) -> Dict[str, str]:
+    encrypter = Encrypter(settings.CRYPTO_KEY)
     roles_list = [role.Code for role in roles]
-    payload = {
+    roles_encrypted = encrypter.encrypt(roles_list)
+
+    data = {
         "user_id": user_id,
         "roles": roles_list,
         "expires": time.time() + (24 * 60 * 60)  # 24 hr
     }
+
+    encrypted_data = encrypter.encrypt(data)
+
+    payload = {"info": encrypted_data}
+
     token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
     return token_response(token)
@@ -29,8 +38,13 @@ def sign_jwt(user_id: str, roles: List[Group]) -> Dict[str, str]:
 
 def decode_jwt(token: str) -> dict:
     try:
+        encrypter = Encrypter(settings.CRYPTO_KEY)
+
         decoded_token = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-        return decoded_token if decoded_token["expires"] >= time.time() else None
+
+        decoded_payload = encrypter.decrypt(decoded_token["info"])
+
+        return decoded_payload if decoded_payload["expires"] >= time.time() else None
 
     except:
         return {}

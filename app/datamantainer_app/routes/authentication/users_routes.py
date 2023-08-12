@@ -4,9 +4,8 @@ from ...controller.authentication.users_controller import UsersController
 from ...models.authentication.users_groups import UserGroupLink
 from ...models.authentication.users import UserLogin, UserCreate, User
 from fastapi import APIRouter, Depends, HTTPException
-#from ...configs.database import SessionLocal
-from ...configs.database import get_session
 from sqlmodel.ext.asyncio.session import AsyncSession
+from ...configs.database import get_session
 from ...auth import auth_handler
 from ...auth import auth_bearer
 from typing import List
@@ -17,7 +16,6 @@ router = APIRouter()
 
 @router.post("/user/login")
 async def user_login(user: UserLogin, session: AsyncSession = Depends(get_session)):
-    #async with SessionLocal() as session:
     async with session.begin():
         user_controller = UsersController(session)
         password_match = await user_controller.check_user_password(user=user)
@@ -46,7 +44,6 @@ async def user_login(user: UserLogin, session: AsyncSession = Depends(get_sessio
              response_model=User,
              dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["INSERT"]))])
 async def create_user(user: UserCreate, session: AsyncSession = Depends(get_session)):
-    #async with SessionLocal() as session:
     async with session.begin():
         user_controller = UsersController(session)
         password_controller = PasswordsController(session)
@@ -79,7 +76,6 @@ async def create_user(user: UserCreate, session: AsyncSession = Depends(get_sess
 
 @router.get("/users", response_model=List[User])
 async def read_users(skip: int = 0, limit: int = 100, session: AsyncSession = Depends(get_session)):
-    #async with SessionLocal() as session:
     async with session.begin():
         user_controller = UsersController(session)
         db_users = await user_controller.get_users(skip=skip, limit=limit)
@@ -92,7 +88,6 @@ async def read_users(skip: int = 0, limit: int = 100, session: AsyncSession = De
 @router.get("/users/q",
             response_model=User)
 async def read_user(user_id: int | None = None, user_email: str | None = None, session: AsyncSession = Depends(get_session)):
-    #async with SessionLocal() as session:
     async with session.begin():
         if user_id is not None:
             user_controller = UsersController(session)
@@ -123,7 +118,6 @@ async def read_user(user_id: int | None = None, user_email: str | None = None, s
 @router.post("/users/assign_role_to_user",
              dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["ADMINISTRATOR"]))])
 async def assign_role_to_user(user_group: UserGroupLink, session: AsyncSession = Depends(get_session)):
-    #async with SessionLocal() as session:
     async with session.begin():
         user_controller = UsersController(session)
         group_controller = GroupsController(session)

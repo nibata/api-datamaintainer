@@ -79,6 +79,7 @@ jobs:
         JWT_SECRET: please_please_update_me_please
         JWT_ALGORITHM: HS256
         SENTRY_DNS: ${{ secrets.SENTRY_DNS }}
+        CRYPTO_KEY: ${{ secrets.CRYPTO_KEY_TEST}}
         
     - name: Publish Test Report
       uses: mikepenz/action-junit-report@v3
