@@ -19,6 +19,7 @@ if __name__ == "__main__":
         USER_ADMIN = input("User Admin email for DataBase (default.- the same as Admin Email): ") or ADMIN_EMAIL
         PASS_ADMIN = input("User Admin password for DataBase (default.- admin): ") or "admin"
         SENTRY_DNS = input("Sentry DNS (only if you have one): ") or "''"
+        CRYPTO_KEY = input("Key to encrypt data: ")
 
         f.write(f"SECRET_KEY={SECRET_KEY}\n")
         f.write(f"ADMIN_EMAIL={ADMIN_EMAIL}\n")
@@ -35,6 +36,7 @@ if __name__ == "__main__":
         f.write(f"PASS_ADMIN={PASS_ADMIN}\n")
         f.write(f"SENTRY_DNS={SENTRY_DNS}\n")
         f.write(f"DB_ASYNC_DRIVER={DB_ASYNC_DRIVER}\n")
+        f.write(f'CRYPTO_KEY="{CRYPTO_KEY}"')
 
         f.close()
 

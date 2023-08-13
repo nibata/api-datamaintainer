@@ -12,6 +12,7 @@
 
 
 from .routes.authentication import users_routes, groups_routes, passwords_routes
+from .routes.stock import stock_moves_routes
 from .routes.default import default_routes
 from .configs.sentry import *
 from .configs import settings
@@ -27,3 +28,4 @@ app.include_router(users_routes.router)
 app.include_router(default_routes.router)
 app.include_router(groups_routes.router)
 app.include_router(passwords_routes.router)
+app.include_router(stock_moves_routes.router)

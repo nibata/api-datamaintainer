@@ -13,7 +13,6 @@ router = APIRouter()
              response_model=GroupRead,
              dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["ADMINISTRATOR"]))])
 async def create_group(group: GroupCreate, session: AsyncSession = Depends(get_session)):
-    #async with SessionLocal() as session:
     async with session.begin():
         group_controller = GroupsController(session)
         db_group = await group_controller.get_group_by_code(code=group.Code)

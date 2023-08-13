@@ -38,5 +38,3 @@ Las variables a utilizar son:
  - SENTRY_DNS: Por si se está utilizando SENTRY, acá se debe colocar la DNS entregada por el servicio
 
 Estas variables se pueden configurar ejecutado `python create_env.py` el cual preguntará cuales son los valores que se desean asignar a cada una de las variables o si se usa el valor por defecto.
-
-[ESTE LINK TIENE UN EJEMPLO DE SQLModel, FASTAPI Y ALEMBIC](https://testdriven.io/blog/fastapi-sqlmodel/)
