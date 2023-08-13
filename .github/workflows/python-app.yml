@@ -44,7 +44,7 @@ jobs:
           architecture: x64
 
     - name: Install dependencies
-      run: pip install -r requirements.txt
+      run: pip install -r requirements-with-faker.txt
 
     - name: Connect to postgres
       working-directory: ./app
