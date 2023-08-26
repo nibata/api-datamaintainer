@@ -1,10 +1,14 @@
-from ...models.stock import stock_moves
 from sqlmodel.ext.asyncio.session import AsyncSession
+from ...models.stock import stock_moves
 from sqlmodel import select
 from datetime import date
 
 
 class StockMoveController:
+    """
+    It defines the possible actions to take when stocks refers like get the moves of certain product or
+    any possible combination.
+    """
     def __init__(self, session: AsyncSession):
         self.session = session
 
