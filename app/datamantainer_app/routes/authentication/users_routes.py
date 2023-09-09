@@ -14,7 +14,7 @@ from typing import List
 router = APIRouter()
 
 
-@router.post("/user/login")
+@router.post("/user/login", tags=["Authentication"])
 async def user_login(user: UserLogin, session: AsyncSession = Depends(get_session)):
     async with session.begin():
         user_controller = UsersController(session)
@@ -42,7 +42,8 @@ async def user_login(user: UserLogin, session: AsyncSession = Depends(get_sessio
 
 @router.post("/users",
              response_model=User,
-             dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["INSERT"]))])
+             dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["INSERT"]))],
+             tags=["Authentication"])
 async def create_user(user: UserCreate, session: AsyncSession = Depends(get_session)):
     async with session.begin():
         user_controller = UsersController(session)
@@ -74,7 +75,7 @@ async def create_user(user: UserCreate, session: AsyncSession = Depends(get_sess
         return rtn
 
 
-@router.get("/users", response_model=List[User])
+@router.get("/users", response_model=List[User], tags=["Authentication"])
 async def read_users(skip: int = 0, limit: int = 100, session: AsyncSession = Depends(get_session)):
     async with session.begin():
         user_controller = UsersController(session)
@@ -86,7 +87,8 @@ async def read_users(skip: int = 0, limit: int = 100, session: AsyncSession = De
 
 
 @router.get("/users/q",
-            response_model=User)
+            response_model=User,
+            tags=["Authentication"])
 async def read_user(user_id: int | None = None, user_email: str | None = None, session: AsyncSession = Depends(get_session)):
     async with session.begin():
         if user_id is not None:
@@ -116,7 +118,8 @@ async def read_user(user_id: int | None = None, user_email: str | None = None, s
 
 
 @router.post("/users/assign_role_to_user",
-             dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["ADMINISTRATOR"]))])
+             dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["ADMINISTRATOR"]))],
+             tags=["Authentication"])
 async def assign_role_to_user(user_group: UserGroupLink, session: AsyncSession = Depends(get_session)):
     async with session.begin():
         user_controller = UsersController(session)

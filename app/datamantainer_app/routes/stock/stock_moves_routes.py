@@ -9,7 +9,7 @@ from typing import List
 router = APIRouter()
 
 
-@router.get("/stock", response_model=List[ProductMovesRead])
+@router.get("/stock", response_model=List[ProductMovesRead], tags=["Stock"])
 async def movement_product(product: str = "Product 1", session: AsyncSession = Depends(get_session)):
     async with session.begin():
         stock_move_controller = StockMoveController(session)
@@ -20,7 +20,7 @@ async def movement_product(product: str = "Product 1", session: AsyncSession = D
         return db_stock_product
 
 
-@router.get("/stock/all", response_model=List[ProductMovesRead])
+@router.get("/stock/all", response_model=List[ProductMovesRead], tags=["Stock"])
 async def movement_all_product(session: AsyncSession = Depends(get_session)):
     async with session.begin():
         stock_move_controller = StockMoveController(session)

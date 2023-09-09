@@ -12,6 +12,7 @@
 
 
 from .routes.authentication import users_routes, groups_routes, passwords_routes
+from fastapi.middleware.cors import CORSMiddleware
 from .routes.stock import stock_moves_routes
 from .routes.default import default_routes
 from .configs.sentry import *
@@ -22,6 +23,20 @@ from fastapi import FastAPI
 app = FastAPI(
         title=settings.APP_NAME,
         description=settings.DESCRIPTION
+)
+
+origins = [
+    "http://localhost:3000",
+    "localhost:3000"
+]
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
 )
 
 app.include_router(users_routes.router)

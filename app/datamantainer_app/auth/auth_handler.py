@@ -19,7 +19,7 @@ def token_response(token: str):
 def sign_jwt(user_id: str, roles: List[Group]) -> Dict[str, str]:
     encrypter = Encrypter(settings.CRYPTO_KEY)
     roles_list = [role.Code for role in roles]
-    roles_encrypted = encrypter.encrypt(roles_list)
+    # roles_encrypted = encrypter.encrypt(roles_list)
 
     data = {
         "user_id": user_id,

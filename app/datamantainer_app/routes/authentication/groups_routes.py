@@ -11,7 +11,8 @@ router = APIRouter()
 
 @router.post("/groups",
              response_model=GroupRead,
-             dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["ADMINISTRATOR"]))])
+             dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["ADMINISTRATOR"]))],
+             tags=["Authentication"])
 async def create_group(group: GroupCreate, session: AsyncSession = Depends(get_session)):
     async with session.begin():
         group_controller = GroupsController(session)

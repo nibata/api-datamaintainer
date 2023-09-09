@@ -12,7 +12,8 @@ router = APIRouter()
 
 @router.post("/password/create_password",
              response_model=PasswordRead,
-             dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["ADMINISTRATOR"]))])
+             dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["ADMINISTRATOR"]))],
+             tags=["Authentication"])
 async def create_password(form_user_pwd: PasswordCreate, session: AsyncSession = Depends(get_session)):
     async with session.begin():
         user_controller = UsersController(session)
@@ -35,7 +36,8 @@ async def create_password(form_user_pwd: PasswordCreate, session: AsyncSession =
 
 @router.post("/password/update_password",
              response_model=PasswordRead,
-             dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["DEFAULT"]))])
+             dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["DEFAULT"]))],
+             tags=["Authentication"])
 async def update_password(form_user_pwd: PasswordUpdate, session: AsyncSession = Depends(get_session)):
     # Se fuerza que el usuario esté logeado al pedir como dependencia el rol DEFAULT, ya que para que el rol lo tienen
     # todos los usuarios que han ingresado mediante sus credenciales.

@@ -5,7 +5,7 @@ from fastapi import APIRouter
 router = APIRouter()
 
 
-@router.get("/default/test_sentry")
+@router.get("/default/test_sentry", tags=["default"])
 async def test_sentry_function():
     rtn = test_sentry()
     
