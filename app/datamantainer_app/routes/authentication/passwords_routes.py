@@ -19,15 +19,15 @@ async def create_password(form_user_pwd: PasswordCreate, session: AsyncSession =
         user_controller = UsersController(session)
         password_controller = PasswordsController(session)
 
-        db_user = await user_controller.get_user_by_email(email=form_user_pwd.Email)
+        db_user = await user_controller.get_user_by_email(email=form_user_pwd.email)
 
         if not db_user:
             raise HTTPException(status_code=400, detail="Email does not exists")
 
         # set password
-        db_password = await password_controller.create_password(user_id=db_user.Id,
-                                                                password=form_user_pwd.Password,
-                                                                expiration_date=form_user_pwd.ExpirationDate)
+        db_password = await password_controller.create_password(user_id=db_user.id,
+                                                                password=form_user_pwd.password,
+                                                                expiration_date=form_user_pwd.expiration_date)
 
         session.expunge_all()
 
@@ -41,20 +41,20 @@ async def create_password(form_user_pwd: PasswordCreate, session: AsyncSession =
 async def update_password(form_user_pwd: PasswordUpdate, session: AsyncSession = Depends(get_session)):
     # Se fuerza que el usuario esté logeado al pedir como dependencia el rol DEFAULT, ya que para que el rol lo tienen
     # todos los usuarios que han ingresado mediante sus credenciales.
-    #async with SessionLocal() as session:
+    # async with SessionLocal() as session:
     async with session.begin():
         user_controller = UsersController(session)
         password_controller = PasswordsController(session)
 
-        db_user = await user_controller.get_user_by_email(email=form_user_pwd.Email)
+        db_user = await user_controller.get_user_by_email(email=form_user_pwd.email)
         if not db_user:
             raise HTTPException(status_code=400, detail="Email does not exists")
 
         # set password
-        db_password = await password_controller.update_password(user_id=db_user.Id,
-                                                                current_password=form_user_pwd.CurrentPassword,
-                                                                new_password=form_user_pwd.NewPassword,
-                                                                expiration_date=form_user_pwd.ExpirationDate)
+        db_password = await password_controller.update_password(user_id=db_user.id,
+                                                                current_password=form_user_pwd.current_password,
+                                                                new_password=form_user_pwd.new_password,
+                                                                expiration_date=form_user_pwd.expiration_date)
 
         session.expunge_all()
 

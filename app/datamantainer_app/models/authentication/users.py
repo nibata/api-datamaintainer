@@ -11,30 +11,30 @@ if TYPE_CHECKING:
 
 # BASE
 class UserBase(SQLModel):
-    FullName: str = Field(nullable=False, regex="^[a-zA-Z0-9äöüÄÖÜáéíóúÁÉÍÓÚ ]*$")
-    Email: EmailStr = Field(nullable=False)
+    full_name: str = Field(nullable=False, regex="^[a-zA-Z0-9äöüÄÖÜáéíóúÁÉÍÓÚ ]*$")
+    email: EmailStr = Field(nullable=False)
 
 
 # TABLES
 class User(UserBase, table=True):
     """User Class contains standard information for a User."""
  
-    __tablename__ = "User"
-    __table_args__ = {"schema": "Authentication"}
+    __tablename__ = "user"
+    __table_args__ = {"schema": "authentication"}
 
     # Fields
-    Id: int = Field(nullable=False, primary_key=True)
-    IsActive: bool = Field(default=False, nullable=False)
+    id: int = Field(nullable=False, primary_key=True)
+    is_active: bool = Field(default=False, nullable=False)
 
     # Relations
-    GroupLinks: List["UserGroupLink"] = Relationship(back_populates="Users")
+    group_links: List["UserGroupLink"] = Relationship(back_populates="users")
 
 
 class UserCreate(UserBase):
-    Password: str = Field(nullable=False)
-    ExpirationDate: Optional[date] = None
+    password: str = Field(nullable=False)
+    expiration_date: Optional[date] = None
 
 
 class UserLogin(SQLModel):
-    Email: EmailStr = Field(nullable=False)
-    Password: str = Field(nullable=False)
+    email: EmailStr = Field(nullable=False)
+    password: str = Field(nullable=False)

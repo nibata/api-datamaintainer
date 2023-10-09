@@ -8,20 +8,20 @@ import hashlib
 
 
 class PasswordBase(SQLModel):
-    CreationDate: datetime = Field(default_factory=datetime.utcnow, nullable=False)
-    IsActive: bool = Field(nullable=False, default=True)
-    ExpirationDate: Optional[date] = Field(nullable=True)
+    creation_date: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    is_active: bool = Field(nullable=False, default=True)
+    expiration_date: Optional[date] = Field(nullable=True)
 
 
 class Password(PasswordBase, table=True):
     """Password Class contains standard information for a Passwords for users."""
  
-    __tablename__ = "Password"
-    __table_args__ = {"schema": "Authentication"}
+    __tablename__ = "password"
+    __table_args__ = {"schema": "authentication"}
 
-    Id: int = Field(primary_key=True, nullable=False)
-    UserId: int = Field(foreign_key=User.Id)
-    HashedPassword: str = Field(nullable=False, max_length=120)
+    id: int = Field(primary_key=True, nullable=False)
+    user_id: int = Field(foreign_key=User.id)
+    hashed_password: str = Field(nullable=False, max_length=120)
 
 
     @staticmethod
@@ -47,19 +47,19 @@ class Password(PasswordBase, table=True):
 
 
 class PasswordRead(SQLModel):
-    UserId: int
-    IsActive: bool
-    ExpirationDate: date
+    user_id: int
+    is_active: bool
+    expiration_date: Optional[date] = None
 
 
 class PasswordUpdate(SQLModel):
-    Email: EmailStr = Field(nullable=False)
-    CurrentPassword: str = Field(nullable=False)
-    NewPassword: str = Field(nullable=False)
-    ExpirationDate: Optional[date] = None
+    email: EmailStr = Field(nullable=False)
+    current_password: str = Field(nullable=False)
+    new_password: str = Field(nullable=False)
+    expiration_date: Optional[date] = None
 
 
 class PasswordCreate(SQLModel):
-    Email: EmailStr = Field(nullable=False)
-    Password: str = Field(nullable=False)
-    ExpirationDate: Optional[date] = None
+    email: EmailStr = Field(nullable=False)
+    password: str = Field(nullable=False)
+    expiration_date: Optional[date] = None

@@ -24,12 +24,12 @@ class PasswordsController:
         """
 
         password = await self.session.execute(select(model_password.Password).
-                                              where(model_password.Password.UserId == user_id,
-                                                    model_password.Password.IsActive))
+                                              where(model_password.Password.user_id == user_id,
+                                                    model_password.Password.is_active))
 
         password = password.scalars().first()
 
-        return password.HashedPassword
+        return password.hashed_password
 
     async def check_password(self, user_id: int, password_to_check: str) -> bool:
         """Check if the passed password is equal to the active password registered in database
@@ -78,9 +78,9 @@ class PasswordsController:
 
         hashed_password = model_password.Password.set_password(password)
 
-        db_password = model_password.Password(UserId=user_id,
-                                              HashedPassword=hashed_password,
-                                              ExpirationDate=expiration_date)
+        db_password = model_password.Password(user_id=user_id,
+                                              hashed_password=hashed_password,
+                                              expiration_date=expiration_date)
 
         self.session.add(db_password)
 
@@ -106,8 +106,8 @@ class PasswordsController:
         """
 
         rtn = await self.session.execute(select(model_password.Password).where(
-            model_password.Password.UserId == user_id,
-            model_password.Password.IsActive))
+            model_password.Password.user_id == user_id,
+            model_password.Password.is_active))
 
         rtn = rtn.scalars().first()
 
@@ -165,12 +165,12 @@ class PasswordsController:
             User's id that is disabled
         """
         password = await self.session.execute(select(model_password.Password).
-                                              where(model_password.Password.UserId == user_id,
-                                                    model_password.Password.IsActive))
+                                              where(model_password.Password.user_id == user_id,
+                                                    model_password.Password.is_active))
         passwords = password.scalars().all()
 
         for pwd in passwords:
-            pwd.IsActive = False
+            pwd.is_active = False
 
         await self.session.flush()
 

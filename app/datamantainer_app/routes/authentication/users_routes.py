@@ -19,16 +19,16 @@ async def user_login(user: UserLogin, session: AsyncSession = Depends(get_sessio
     async with session.begin():
         user_controller = UsersController(session)
         password_match = await user_controller.check_user_password(user=user)
-        user_obj = await user_controller.get_user_by_email(email=user.Email)
+        user_obj = await user_controller.get_user_by_email(email=user.email)
 
         if user_obj is not None and password_match:
-            is_user_active = user_obj.IsActive
+            is_user_active = user_obj.is_active
 
             if password_match and is_user_active:
-                db_user = await user_controller.get_user_by_email(email=user.Email)
-                roles = await user_controller.get_groups_from_user(user_id=db_user.Id)
+                db_user = await user_controller.get_user_by_email(email=user.email)
+                roles = await user_controller.get_groups_from_user(user_id=db_user.id)
 
-                return auth_handler.sign_jwt(user_id=user.Email, roles=roles)
+                return auth_handler.sign_jwt(user_id=user.email, roles=roles)
 
             if not is_user_active:
                 return {
@@ -50,7 +50,7 @@ async def create_user(user: UserCreate, session: AsyncSession = Depends(get_sess
         password_controller = PasswordsController(session)
         group_controller = GroupsController(session)
 
-        db_user = await user_controller.get_user_by_email(email=user.Email)
+        db_user = await user_controller.get_user_by_email(email=user.email)
         group_db = await group_controller.get_group_by_code("DEFAULT")
 
         if db_user:
@@ -60,15 +60,15 @@ async def create_user(user: UserCreate, session: AsyncSession = Depends(get_sess
         user_db = await user_controller.create_user(user=user)
 
         # set password
-        await password_controller.create_password(user_id=user_db.Id,
-                                                  password=user.Password,
-                                                  expiration_date=user.ExpirationDate)
+        await password_controller.create_password(user_id=user_db.id,
+                                                  password=user.password,
+                                                  expiration_date=user.expiration_date)
 
-        await user_controller.assign_role_to_user(user_id=user_db.Id,
-                                                  group_id=group_db.Id)
+        await user_controller.assign_role_to_user(user_id=user_db.id,
+                                                  group_id=group_db.id)
 
         # obtengo usuario de base de datos (el objeto user_db no esta linkeado a la session)
-        rtn = await user_controller.get_user(user_id=user_db.Id)
+        rtn = await user_controller.get_user(user_id=user_db.id)
 
         session.expunge_all()
 
@@ -89,7 +89,9 @@ async def read_users(skip: int = 0, limit: int = 100, session: AsyncSession = De
 @router.get("/users/q",
             response_model=User,
             tags=["Authentication"])
-async def read_user(user_id: int | None = None, user_email: str | None = None, session: AsyncSession = Depends(get_session)):
+async def read_user(user_id: int | None = None,
+                    user_email: str | None = None,
+                    session: AsyncSession = Depends(get_session)):
     async with session.begin():
         if user_id is not None:
             user_controller = UsersController(session)
@@ -125,11 +127,11 @@ async def assign_role_to_user(user_group: UserGroupLink, session: AsyncSession =
         user_controller = UsersController(session)
         group_controller = GroupsController(session)
 
-        user_roles = [group.Id for group in await user_controller.get_groups_from_user(user_id=user_group.UserId)]
-        user = await user_controller.get_user(user_id=user_group.UserId)
-        group = await group_controller.get_group_by_id(group_id=user_group.GroupId)
+        user_roles = [group.id for group in await user_controller.get_groups_from_user(user_id=user_group.user_id)]
+        user = await user_controller.get_user(user_id=user_group.user_id)
+        group = await group_controller.get_group_by_id(group_id=user_group.group_id)
 
-        if user_group.GroupId in user_roles:
+        if user_group.group_id in user_roles:
             raise HTTPException(status_code=400, detail="The user is already assigned to this role")
 
         elif user is None:
@@ -138,4 +140,4 @@ async def assign_role_to_user(user_group: UserGroupLink, session: AsyncSession =
         elif group is None:
             raise HTTPException(status_code=400, detail="The role doesn't exists")
 
-        return await user_controller.assign_role_to_user(user_id=user_group.UserId, group_id=user_group.GroupId)
+        return await user_controller.assign_role_to_user(user_id=user_group.user_id, group_id=user_group.group_id)

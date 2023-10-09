@@ -14,13 +14,13 @@ class StockMoveController:
 
     async def get_movement_by_product_and_date(self, product: str, date_movement: date):
         rtn = await self.session.execute(select(stock_moves.ProductMoves)
-                                         .where(stock_moves.ProductMoves.Product == product,
-                                                stock_moves.ProductMoves.TimeAt == date_movement))
+                                         .where(stock_moves.ProductMoves.product == product,
+                                                stock_moves.ProductMoves.time_at == date_movement))
         return rtn.scalars().all()
 
     async def get_movement_by_product(self, product: str):
         rtn = await self.session.execute(select(stock_moves.ProductMoves)
-                                         .where(stock_moves.ProductMoves.Product == product))
+                                         .where(stock_moves.ProductMoves.product == product))
         return rtn.scalars().all()
 
     async def get_all_movement(self):

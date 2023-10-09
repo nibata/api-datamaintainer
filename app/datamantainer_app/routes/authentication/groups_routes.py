@@ -16,14 +16,14 @@ router = APIRouter()
 async def create_group(group: GroupCreate, session: AsyncSession = Depends(get_session)):
     async with session.begin():
         group_controller = GroupsController(session)
-        db_group = await group_controller.get_group_by_code(code=group.Code)
+        db_group = await group_controller.get_group_by_code(code=group.code)
 
         if db_group:
             raise HTTPException(status_code=400, detail="Group already Exists")
 
         group_db = await group_controller.create_group(group=group)
 
-        rtn = await group_controller.get_group_by_id(group_id=group_db.Id)
+        rtn = await group_controller.get_group_by_id(group_id=group_db.id)
 
         session.expunge_all()
 

@@ -7,7 +7,6 @@ from typing import List
 class JWTBearer(HTTPBearer):
     def __init__(self, required_permission: List[str], auto_error: bool = True):
         super(JWTBearer, self).__init__(auto_error=auto_error)
-
         self.required_permission: List[str] = required_permission
 
     async def __call__(self, request: Request):

@@ -9,26 +9,26 @@ if TYPE_CHECKING:
 
 # BASE
 class GroupBase(SQLModel):
-    Code: str = Field(nullable=False, unique=True, regex="^[a-zA-Z0-9äöüÄÖÜáéíóúÁÉÍÓÚ ]*$")
-    Description: str
+    code: str = Field(nullable=False, unique=True, regex="^[a-zA-Z0-9äöüÄÖÜáéíóúÁÉÍÓÚ ]*$")
+    description: str = Field(nullable=True)
 
 
 # TABLE
 class Group(GroupBase, table=True):
     """Group Class contains standard information for a Groups."""
 
-    __tablename__ = "Group"
-    __table_args__ = {"schema": "Authentication"}
+    __tablename__ = "group"
+    __table_args__ = {"schema": "authentication"}
 
-    Id: int = Field(nullable=False, primary_key=True)
+    id: int = Field(nullable=False, primary_key=True)
 
     # Relations
-    UserLinks: List["UserGroupLink"] = Relationship(back_populates="Groups")
+    user_links: List["UserGroupLink"] = Relationship(back_populates="groups")
 
 
 # SCHEMAS
 class GroupRead(GroupBase):
-    Id: int
+    id: int
 
 
 class GroupCreate(GroupBase):

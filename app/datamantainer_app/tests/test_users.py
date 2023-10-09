@@ -42,22 +42,14 @@ async def test_get_user_in_id_1():
 @pytest.mark.anyio
 async def test_create_user():
     json_token = {
-        "Email": ADMIN_EMAIL,
-        "Password": PASS_ADMIN
+        "email": ADMIN_EMAIL,
+        "password": PASS_ADMIN
     }
 
-    print("#" * 10)
-    print("#" * 10)
-    print("#" * 10)
-    print(ADMIN_EMAIL, PASS_ADMIN)
-    print("#" * 10)
-    print("#" * 10)
-    print("#" * 10)
-
     json_insert = {
-        "FullName": "User Test Two",
-        "Email": "user@test.com",
-        "Password": "pwd_test",
+        "full_name": "User Test Two",
+        "email": "user@test.com",
+        "password": "pwd_test",
     }
 
     async with AsyncClient(app=app, base_url="http://test") as async_client:

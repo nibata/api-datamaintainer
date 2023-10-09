@@ -9,15 +9,15 @@ class GroupsController:
         self.session = session
 
     async def get_groups_by_id_list(self, group_ids_list: List):
-        rtn = await self.session.execute(select(model_group.Group).where(model_group.Group.Id.in_(group_ids_list)))
+        rtn = await self.session.execute(select(model_group.Group).where(model_group.Group.id.in_(group_ids_list)))
         return rtn.scalars().all()
 
     async def get_group_by_id(self, group_id: int):
-        rtn = await self.session.execute(select(model_group.Group).where(model_group.Group.Id == group_id))
+        rtn = await self.session.execute(select(model_group.Group).where(model_group.Group.id == group_id))
         return rtn.scalars().first()
 
     async def get_group_by_code(self, code: str):
-        rtn = await self.session.execute(select(model_group.Group).where(model_group.Group.Code == code))
+        rtn = await self.session.execute(select(model_group.Group).where(model_group.Group.code == code))
         return rtn.scalars().first()
 
     async def get_groups(self):
@@ -25,8 +25,8 @@ class GroupsController:
         return rtn.scalars().all()
 
     async def create_group(self, group: model_group.GroupCreate):
-        db_group = model_group.Group(Code=group.Code,
-                                     Description=group.Description)
+        db_group = model_group.Group(code=group.code,
+                                     description=group.description)
 
         self.session.add(db_group)
         await self.session.flush()

@@ -18,8 +18,7 @@ def token_response(token: str):
 
 def sign_jwt(user_id: str, roles: List[Group]) -> Dict[str, str]:
     encrypter = Encrypter(settings.CRYPTO_KEY)
-    roles_list = [role.Code for role in roles]
-    # roles_encrypted = encrypter.encrypt(roles_list)
+    roles_list = [role.code for role in roles]
 
     data = {
         "user_id": user_id,
@@ -28,9 +27,7 @@ def sign_jwt(user_id: str, roles: List[Group]) -> Dict[str, str]:
     }
 
     encrypted_data = encrypter.encrypt(data)
-
     payload = {"info": encrypted_data}
-
     token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
     return token_response(token)
@@ -39,9 +36,7 @@ def sign_jwt(user_id: str, roles: List[Group]) -> Dict[str, str]:
 def decode_jwt(token: str) -> dict:
     try:
         encrypter = Encrypter(settings.CRYPTO_KEY)
-
         decoded_token = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-
         decoded_payload = encrypter.decrypt(decoded_token["info"])
 
         return decoded_payload if decoded_payload["expires"] >= time.time() else None
