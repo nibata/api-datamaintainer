@@ -1,3 +1,4 @@
+from ...modules.humps_implementation_module import to_kebab
 from sqlmodel import Field, Relationship, SQLModel
 from typing import TYPE_CHECKING
 from typing import List, Optional
@@ -13,6 +14,10 @@ if TYPE_CHECKING:
 class UserBase(SQLModel):
     full_name: str = Field(nullable=False, regex="^[a-zA-Z0-9äöüÄÖÜáéíóúÁÉÍÓÚ ]*$")
     email: EmailStr = Field(nullable=False)
+
+    class Config:
+        alias_generator = to_kebab
+        allow_population_by_field_name = True
 
 
 # TABLES
@@ -38,3 +43,7 @@ class UserCreate(UserBase):
 class UserLogin(SQLModel):
     email: EmailStr = Field(nullable=False)
     password: str = Field(nullable=False)
+
+    class Config:
+        alias_generator = to_kebab
+        allow_population_by_field_name = True

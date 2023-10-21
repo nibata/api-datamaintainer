@@ -1,3 +1,4 @@
+from ...modules.humps_implementation_module import to_kebab
 from sqlmodel import SQLModel, Field, Relationship
 from typing import TYPE_CHECKING
 from typing import List
@@ -11,6 +12,10 @@ if TYPE_CHECKING:
 class GroupBase(SQLModel):
     code: str = Field(nullable=False, unique=True, regex="^[a-zA-Z0-9äöüÄÖÜáéíóúÁÉÍÓÚ ]*$")
     description: str = Field(nullable=True)
+
+    class Config:
+        alias_generator = to_kebab
+        allow_population_by_field_name = True
 
 
 # TABLE

@@ -1,14 +1,14 @@
 from ...controller.authentication.passwords_controller import PasswordsController
 from ...controller.authentication.groups_controller import GroupsController
 from ...controller.authentication.users_controller import UsersController
-from ...models.authentication.users_groups import UserGroupLink
 from ...models.authentication.users import UserLogin, UserCreate, User
-from fastapi import APIRouter, Depends, HTTPException
+from ...models.authentication.users_groups import UserGroupLink
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel.ext.asyncio.session import AsyncSession
 from ...configs.database import get_session
+from typing import List, Annotated
 from ...auth import auth_handler
 from ...auth import auth_bearer
-from typing import List
 
 
 router = APIRouter()
@@ -89,8 +89,8 @@ async def read_users(skip: int = 0, limit: int = 100, session: AsyncSession = De
 @router.get("/users/q",
             response_model=User,
             tags=["Authentication"])
-async def read_user(user_id: int | None = None,
-                    user_email: str | None = None,
+async def read_user(user_id: Annotated[int | None, Query(alias="user-id")] = None,
+                    user_email: Annotated[str | None, Query(alias="user-email")] = None,
                     session: AsyncSession = Depends(get_session)):
     async with session.begin():
         if user_id is not None:

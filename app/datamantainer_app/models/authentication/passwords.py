@@ -1,3 +1,4 @@
+from ...modules.humps_implementation_module import to_kebab
 from ...configs.settings import SECRET_KEY
 from sqlmodel import SQLModel, Field
 from datetime import datetime, date
@@ -11,6 +12,10 @@ class PasswordBase(SQLModel):
     creation_date: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     is_active: bool = Field(nullable=False, default=True)
     expiration_date: Optional[date] = Field(nullable=True)
+
+    class Config:
+        alias_generator = to_kebab
+        allow_population_by_field_name = True
 
 
 class Password(PasswordBase, table=True):
@@ -51,6 +56,10 @@ class PasswordRead(SQLModel):
     is_active: bool
     expiration_date: Optional[date] = None
 
+    class Config:
+        alias_generator = to_kebab
+        allow_population_by_field_name = True
+
 
 class PasswordUpdate(SQLModel):
     email: EmailStr = Field(nullable=False)
@@ -58,8 +67,16 @@ class PasswordUpdate(SQLModel):
     new_password: str = Field(nullable=False)
     expiration_date: Optional[date] = None
 
+    class Config:
+        alias_generator = to_kebab
+        allow_population_by_field_name = True
+
 
 class PasswordCreate(SQLModel):
     email: EmailStr = Field(nullable=False)
     password: str = Field(nullable=False)
     expiration_date: Optional[date] = None
+
+    class Config:
+        alias_generator = to_kebab
+        allow_population_by_field_name = True

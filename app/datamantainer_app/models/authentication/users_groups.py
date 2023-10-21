@@ -1,4 +1,5 @@
 from sqlmodel import SQLModel, Field, Relationship, UniqueConstraint
+from ...modules.humps_implementation_module import to_kebab
 from .groups import Group
 from .users import User
 
@@ -15,3 +16,7 @@ class UserGroupLink(SQLModel, table=True):
     # Relations
     users: User = Relationship(back_populates="group_links")
     groups: Group = Relationship(back_populates="user_links")
+
+    class Config:
+        alias_generator = to_kebab
+        allow_population_by_field_name = True

@@ -1,6 +1,8 @@
 from sqlmodel import Field, SQLModel
 from datetime import datetime
 
+from ...modules.humps_implementation_module import to_kebab
+
 
 # BASE
 class ProductMovesBase(SQLModel):
@@ -8,6 +10,10 @@ class ProductMovesBase(SQLModel):
     type_movement: str = Field(nullable=False)
     quantity_units: int = Field(nullable=False)
     time_at: datetime = Field(nullable=False, default_factory=datetime.utcnow)
+
+    class Config:
+        alias_generator = to_kebab
+        allow_population_by_field_name = True
 
 
 # TABLES
