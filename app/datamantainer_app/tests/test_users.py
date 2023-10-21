@@ -34,7 +34,7 @@ async def test_create_user_without_authorization():
 @pytest.mark.anyio
 async def test_get_user_in_id_1():
     async with AsyncClient(app=app, base_url="http://test") as async_client:
-        response = await async_client.get("/users/q?user_id=1")
+        response = await async_client.get("/users/q?user-id=1")
 
     assert response.status_code == 200
 
@@ -47,7 +47,7 @@ async def test_create_user():
     }
 
     json_insert = {
-        "full_name": "User Test Two",
+        "full-name": "User Test Two",
         "email": "user@test.com",
         "password": "pwd_test",
     }
