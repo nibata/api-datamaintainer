@@ -1,6 +1,6 @@
-from ..configs.settings import PASS_ADMIN, ADMIN_EMAIL
+from app.api_and_sql.configs.settings import PASS_ADMIN, ADMIN_EMAIL
+from app.api_and_sql.main import app
 from httpx import AsyncClient
-from ..main import app
 import pytest
 
 
