@@ -1,5 +1,5 @@
-from app.api_and_sql.main import app
 from httpx import AsyncClient
+from ..main import app
 import pytest
 
 
