@@ -9,14 +9,12 @@
                                        |___/                                          
  nibata@gmail.com
 """
-
-
-from .routes.authentication import users_routes, groups_routes, passwords_routes
+from app.api_and_sql.routes.authentication import users_routes, groups_routes, passwords_routes
+from app.api_and_sql.routes.stock import stock_moves_routes
+from app.api_and_sql.routes.default import default_routes
 from fastapi.middleware.cors import CORSMiddleware
-from .routes.stock import stock_moves_routes
-from .routes.default import default_routes
-from .configs.sentry import *
-from .configs import settings
+from app.api_and_sql.configs.sentry import *
+from app.api_and_sql.configs import settings
 from fastapi import FastAPI
 
 

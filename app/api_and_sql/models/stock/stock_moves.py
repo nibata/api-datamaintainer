@@ -21,7 +21,8 @@ class ProductMoves(ProductMovesBase, table=True):
     """User Class contains standard information for a User."""
 
     __tablename__ = "product_moves"
-    __table_args__ = {"schema": "stock"}
+    __table_args__ = {"schema": "stock",
+                      "extend_existing": True}
 
     # Fields
     id: int = Field(nullable=False, primary_key=True)

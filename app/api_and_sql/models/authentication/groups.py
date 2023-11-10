@@ -23,7 +23,8 @@ class Group(GroupBase, table=True):
     """Group Class contains standard information for a Groups."""
 
     __tablename__ = "group"
-    __table_args__ = {"schema": "authentication"}
+    __table_args__ = {"schema": "authentication",
+                      "extend_existing": True}
 
     id: int = Field(nullable=False, primary_key=True)
 

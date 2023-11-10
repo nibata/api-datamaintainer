@@ -11,8 +11,8 @@ import sqlmodel
 from faker import Faker
 from faker.providers import DynamicProvider
 from datetime import datetime
-from datamantainer_app.models import Password
-from datamantainer_app.configs.settings import USER_ADMIN, PASS_ADMIN, ADMIN_EMAIL
+from api_and_sql.models import Password
+from api_and_sql.configs.settings import USER_ADMIN, PASS_ADMIN, ADMIN_EMAIL
 
 product_provider = DynamicProvider(provider_name="product", elements=["Product 1", "Product 2", "Product 3"])
 movement_type_provider = DynamicProvider(provider_name="movement_type", elements=["Sell", "Buy"])

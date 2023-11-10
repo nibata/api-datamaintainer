@@ -22,7 +22,8 @@ class Password(PasswordBase, table=True):
     """Password Class contains standard information for a Passwords for users."""
  
     __tablename__ = "password"
-    __table_args__ = {"schema": "authentication"}
+    __table_args__ = {"schema": "authentication",
+                      "extend_existing": True}
 
     id: int = Field(primary_key=True, nullable=False)
     user_id: int = Field(foreign_key=User.id)
