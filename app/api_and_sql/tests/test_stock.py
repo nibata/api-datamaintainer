@@ -3,9 +3,14 @@ from ..main import app
 import pytest
 
 
-@pytest.fixture
-def anyio_backend(db):
-    return 'asyncio'
+try:
+    @pytest.fixture
+    def anyio_backend(db):
+        return 'asyncio'
+except ValueError as er:
+    @pytest.fixture
+    def anyio_backend():
+        return 'asyncio'
 
 
 @pytest.mark.anyio
