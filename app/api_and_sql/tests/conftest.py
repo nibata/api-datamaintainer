@@ -13,6 +13,13 @@ from alembic import context
 def db():
     # Create a test database engine
     uri_async_db = os.environ.get("DB_ASYNC_TEST")
+    print("#" * 10)
+    print("#" * 10)
+    print("#" * 10)
+    print(uri_async_db)
+    print("#" * 10)
+    print("#" * 10)
+    print("#" * 10)
     if uri_async_db is not None or uri_async_db != "":
         engine = create_engine(uri_async_db)
         Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
