@@ -82,7 +82,7 @@ jobs:
         JWT_ALGORITHM: HS256
         SENTRY_DNS: ${{ secrets.SENTRY_DNS }}
         CRYPTO_KEY: ${{ secrets.CRYPTO_KEY_TEST}}
-        B_ASYNC_TEST: postgresql+asyncpg://postgres:postgrespw@localhost:5432/FastAPI_DB
+        DB_ASYNC_TEST: postgresql+asyncpg://postgres:postgrespw@localhost:5432/FastAPI_DB
         
     - name: Publish Test Report
       uses: mikepenz/action-junit-report@v3
