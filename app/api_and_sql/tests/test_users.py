@@ -60,3 +60,34 @@ async def test_create_user():
         response_test = await async_client.post("/users", json=json_insert, headers=headers)
 
     assert response_test.status_code == 200
+
+
+@pytest.mark.anyio
+async def test_create_user_not_valid_token():
+    json_insert = {
+        "full-name": "User Test Two",
+        "email": "user@test.com",
+        "password": "pwd_test",
+    }
+
+    async with AsyncClient(app=app, base_url="http://test") as async_client:
+        auth_invalid_token = "INVALID TOKEN"
+        auth_autogen_token = ("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbmZvIjoiZ0FBQUFBQmxUM0NXdl9vZzFBOWxkTHVRWDZFQ3l"
+                              "4TG03R2lEWXZqMmhyWHZ3TUlzRjNhVDFpbGxkYk9UdUUycXRVRmxGN2lReUZxdWtmR2VWWHBoa2g3bGVlMjA1Zz"
+                              "ZaUml3UnR6LV8yUk9mTWxwd0hWYm8yTkFOVXhSamt2SUNiRzVRR1VZWWwwWlVEaFd0NUM1dThzUGNUV3BkMTJ0WD"
+                              "JWRUhUekFwdG1XODdOZTRwVWNCcGFfcm93NHFTZmNnSzVQVElWOG5EdWlaT0FKUmdRUlpJMlVpTG5lbmlfQ284UE"
+                              "tENlVaM3ltYUFzUFdTLWp6RHBLST0ifQ.0Wj4zK5x47AR5XnIwmQ8UsekFqVB6-OO3wGn5vtodSs")
+
+        headers_invalid_token = {"Authorization": f"Bearer {auth_invalid_token}"}
+        headers_autogen_token = {"Authorization": f"Bearer {auth_autogen_token}"}
+
+        response_headers_invalid_token_test = await async_client.post("/users",
+                                                                      json=json_insert,
+                                                                      headers=headers_invalid_token)
+
+        response_autogen_token = await async_client.post("/users",
+                                                         json=json_insert,
+                                                         headers=headers_autogen_token)
+
+    assert response_headers_invalid_token_test.status_code == 403
+    assert response_autogen_token.status_code == 403

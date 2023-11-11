@@ -1,0 +1,6 @@
+[run]
+omit =
+        */alembic/*
+        */PyCharm Professional Edition.app/Contents/plugins/*
+
+concurrency = gevent

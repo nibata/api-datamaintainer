@@ -19,18 +19,12 @@ ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL")
 SECRET_KEY = os.environ.get("SECRET_KEY")
 DB_DRIVER = os.environ.get("DB_DRIVER")
 DB_ASYNC_DRIVER = os.environ.get("DB_ASYNC_DRIVER")
-USE_ASYNC = DB_ASYNC_DRIVER != ""
 DB_USER = os.environ.get("DB_USER")
 DB_PASS = os.environ.get("DB_PASS")
 DB_HOST = os.environ.get("DB_HOST")
 DB_PORT = os.environ.get("DB_PORT")
 DB_DATABASE_NAME = os.environ.get("DB_DATABASE_NAME")
-
-
-if USE_ASYNC:
-    SQLALCHEMY_DATABASE_URL = f"{DB_DRIVER}+{DB_ASYNC_DRIVER}://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_DATABASE_NAME}"
-else:
-    SQLALCHEMY_DATABASE_URL = f"{DB_DRIVER}://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_DATABASE_NAME}"
+SQLALCHEMY_DATABASE_URL = f"{DB_DRIVER}+{DB_ASYNC_DRIVER}://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_DATABASE_NAME}"
 
 UNIT_TEST = os.environ.get("UNIT_TEST") == "True"
 DB_ASYNC_TEST = os.environ.get("DB_ASYNC_TEST")

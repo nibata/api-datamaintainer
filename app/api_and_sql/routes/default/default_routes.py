@@ -10,7 +10,7 @@ async def default_page():
     return {"app": "API AND SQL"}
 
 
-@router.get("/test_sentry", tags=["default"])
+@router.get("/test_sentry", tags=["default"], include_in_schema=False)
 async def test_sentry_function():
     rtn = test_sentry()
     
