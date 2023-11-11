@@ -62,7 +62,6 @@ jobs:
         PASS_ADMIN: ${{ secrets.PASSWORD_TEST }}
         USER_ADMIN: ${{ secrets.USER_TEST }}
         CRYPTO_KEY: ${{ secrets.CRYPTO_KEY_TEST}}
-        DB_ASYNC_TEST: postgresql+asyncpg://postgres:postgrespw@localhost:5432/FastAPI_DB
 
     - name: Unit Test
       run: pytest --junitxml=res-test.xml
@@ -82,8 +81,7 @@ jobs:
         JWT_ALGORITHM: HS256
         SENTRY_DNS: ${{ secrets.SENTRY_DNS }}
         CRYPTO_KEY: ${{ secrets.CRYPTO_KEY_TEST}}
-        DB_ASYNC_TEST: postgresql+asyncpg://postgres:postgrespw@localhost:5432/FastAPI_DB
-        
+
     - name: Publish Test Report
       uses: mikepenz/action-junit-report@v3
       if: success() || failure()
