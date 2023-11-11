@@ -1,3 +1,5 @@
+import logging
+
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi import Request, HTTPException
 from .auth_handler import decode_jwt
@@ -30,7 +32,8 @@ class JWTBearer(HTTPBearer):
         try:
             payload = decode_jwt(jwt_token)
 
-        except:
+        except Exception as er:
+            logging.warning(er)
             payload = None
             
         if payload:

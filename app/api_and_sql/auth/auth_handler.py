@@ -44,4 +44,4 @@ def decode_jwt(token: str) -> dict:
         return decoded_payload if decoded_payload["expires"] >= time.time() else None
 
     except Exception as er:
-        raise Exception(f"Error al obtener token: {er}")
+        raise Exception(f"INVALID AUTHENTICATION TOKEN: {er}")
