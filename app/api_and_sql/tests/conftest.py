@@ -50,4 +50,12 @@ def db():
         command.downgrade(alembic_cfg, "base")
 
     else:
-        engi
+        engine = create_engine(SQLALCHEMY_DATABASE_URL)
+        Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+        session = Session()
+
+        yield session
+
+        # Teardown: Drop the test database
+        session.close()
+        engine.dispose()
