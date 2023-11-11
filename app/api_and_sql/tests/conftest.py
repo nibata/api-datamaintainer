@@ -12,7 +12,8 @@ from alembic import context
 @pytest.fixture(scope="session")
 def db():
     # Create a test database engine
-    engine = create_engine("postgresql+asyncpg://postgres:postgrespw@localhost:55000/FastAPI_DB_Test")
+    uri_async_db = os.environ.get("DB_ASYNC_TEST")
+    engine = create_engine(uri_async_db)
     Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
     # Run Alembic migrations
