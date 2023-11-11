@@ -50,7 +50,13 @@ DB_DATABASE_NAME=os.environ.get("DB_DATABASE_NAME")
 
 SQLALCHEMY_DATABASE_URL = f"{DB_DRIVER}://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_DATABASE_NAME}"
 
+UNIT_TEST = os.environ.get("UNIT_TEST") == "True"
+DB_TEST = os.environ.get("DB_TEST")
+if UNIT_TEST:
+    SQLALCHEMY_DATABASE_URL = DB_TEST
+
 config.set_main_option('sqlalchemy.url', SQLALCHEMY_DATABASE_URL) 
+
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.

@@ -25,8 +25,7 @@ class User(UserBase, table=True):
     """User Class contains standard information for a User."""
  
     __tablename__ = "user"
-    __table_args__ = {"schema": "authentication",
-                      "extend_existing": True}
+    __table_args__ = {"schema": "authentication"}
 
     # Fields
     id: int = Field(nullable=False, primary_key=True)
