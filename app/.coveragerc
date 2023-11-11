@@ -2,5 +2,9 @@
 omit =
         */alembic/*
         */PyCharm Professional Edition.app/Contents/plugins/*
+        */__init__.py
 
 concurrency = gevent
+
+exclude_lines =
+        # pragma: no cover

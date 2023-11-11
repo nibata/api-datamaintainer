@@ -40,6 +40,52 @@ async def test_get_user_in_id_1():
 
 
 @pytest.mark.anyio
+async def test_get_user_not_found():
+    async with AsyncClient(app=app, base_url="http://test") as async_client:
+        response = await async_client.get("/users/q?user-id=0")
+
+    assert response.status_code == 404
+
+
+@pytest.mark.anyio
+async def test_get_user_by_email():
+    async with AsyncClient(app=app, base_url="http://test") as async_client:
+        response = await async_client.get("/users/q?user-email=nibata@gmail.com")
+
+    assert response.status_code == 200
+
+
+@pytest.mark.anyio
+async def test_get_user_not_found_by_email():
+    async with AsyncClient(app=app, base_url="http://test") as async_client:
+        response = await async_client.get("/users/q?user-email=not@existing.com")
+
+    assert response.status_code == 404
+
+
+@pytest.mark.anyio
+async def test_get_user_not_given_user():
+    async with AsyncClient(app=app, base_url="http://test") as async_client:
+        response = await async_client.get("/users/q")
+
+    assert response.status_code == 404
+
+
+@pytest.mark.anyio
+async def test_loging_wrong_credential():
+    json_token = {
+        "email": ADMIN_EMAIL,
+        "password": "WRONG_PWD"
+    }
+
+    async with AsyncClient(app=app, base_url="http://test") as async_client:
+        response_token = await async_client.post("/user/login", json=json_token)
+
+    assert response_token.status_code == 200
+    assert response_token.json()["error"] == "Wrong login details"
+
+
+@pytest.mark.anyio
 async def test_create_user():
     json_token = {
         "email": ADMIN_EMAIL,
@@ -60,6 +106,29 @@ async def test_create_user():
         response_test = await async_client.post("/users", json=json_insert, headers=headers)
 
     assert response_test.status_code == 200
+
+
+@pytest.mark.anyio
+async def test_create_user_already_registered():
+    json_token = {
+        "email": ADMIN_EMAIL,
+        "password": PASS_ADMIN
+    }
+
+    json_insert = {
+        "full-name": "User Test Two",
+        "email": ADMIN_EMAIL,
+        "password": "pwd_test",
+    }
+
+    async with AsyncClient(app=app, base_url="http://test") as async_client:
+        response_token = await async_client.post("/user/login", json=json_token)
+        auth_token = response_token.json()["access_token"]
+
+        headers = {"Authorization": f"Bearer {auth_token}"}
+        response_test = await async_client.post("/users", json=json_insert, headers=headers)
+
+    assert response_test.status_code == 400
 
 
 @pytest.mark.anyio

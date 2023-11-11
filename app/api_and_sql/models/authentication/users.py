@@ -7,7 +7,7 @@ from datetime import date
 
 
 if TYPE_CHECKING:
-    from .users_groups import UserGroupLink
+    from .users_groups import UserGroupLink  # pragma: no cover
 
 
 # BASE

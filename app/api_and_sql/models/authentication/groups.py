@@ -5,7 +5,7 @@ from typing import List
 
 
 if TYPE_CHECKING:
-    from .users_groups import UserGroupLink
+    from .users_groups import UserGroupLink  # pragma: no cover
 
 
 # BASE
