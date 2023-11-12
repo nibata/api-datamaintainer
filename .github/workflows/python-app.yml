@@ -91,5 +91,5 @@ jobs:
       uses: MishaKav/pytest-coverage-comment@main
       if: success() || failure()
       with:
-        report_paths: ./app/res-test.xml
+        junitxml-path: ./app/res-test.xml
         pytest-coverage-path: ./app/pytest-coverage.txt
