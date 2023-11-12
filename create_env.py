@@ -38,7 +38,5 @@ if __name__ == "__main__":
         f.write(f"DB_ASYNC_DRIVER={DB_ASYNC_DRIVER}\n")
         f.write(f'CRYPTO_KEY="{CRYPTO_KEY}"')
 
-        f.close()
-
     print("FINISH!")
     print("Edit file at: '/app/env/.env'")

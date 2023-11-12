@@ -28,7 +28,6 @@ class Password(PasswordBase, table=True):
     user_id: int = Field(foreign_key=User.id)
     hashed_password: str = Field(nullable=False, max_length=120)
 
-
     @staticmethod
     def set_password(pwd: str) -> str:
         """Genera password hasheada mediante método md5
@@ -46,7 +45,7 @@ class Password(PasswordBase, table=True):
         
         salt = SECRET_KEY
         password_to_hash = pwd + salt
-        password = hashlib.md5(password_to_hash.encode()).hexdigest()
+        password = hashlib.sha256(password_to_hash.encode()).hexdigest()
 
         return password
 
