@@ -1,7 +1,7 @@
 from sqlmodel.ext.asyncio.session import AsyncSession
 from ...models.stock import stock_moves
+from datetime import date, timedelta
 from sqlmodel import select
-from datetime import date
 
 
 class StockMoveController:
@@ -15,7 +15,8 @@ class StockMoveController:
     async def get_movement_by_product_and_date(self, product: str, date_movement: date):
         rtn = await self.session.execute(select(stock_moves.ProductMoves)
                                          .where(stock_moves.ProductMoves.product == product,
-                                                stock_moves.ProductMoves.time_at == date_movement))
+                                                stock_moves.ProductMoves.time_at >= date_movement,
+                                                stock_moves.ProductMoves.time_at < (date_movement + timedelta(days=1))))
         return rtn.scalars().all()
 
     async def get_movement_by_product(self, product: str):

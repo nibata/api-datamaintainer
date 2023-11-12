@@ -72,6 +72,14 @@ class PasswordUpdate(SQLModel):
         allow_population_by_field_name = True
 
 
+class PasswordDeactivate(SQLModel):
+    email: EmailStr = Field(nullable=False)
+
+    class Config:
+        alias_generator = to_kebab
+        allow_population_by_field_name = True
+
+
 class PasswordCreate(SQLModel):
     email: EmailStr = Field(nullable=False)
     password: str = Field(nullable=False)

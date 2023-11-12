@@ -1,4 +1,4 @@
-from ...models.authentication.passwords import PasswordRead, PasswordCreate, PasswordUpdate
+from ...models.authentication.passwords import PasswordRead, PasswordCreate, PasswordUpdate, PasswordDeactivate
 from ...controller.authentication.passwords_controller import PasswordsController
 from ...controller.authentication.users_controller import UsersController
 from fastapi import APIRouter, Depends, HTTPException
@@ -59,3 +59,22 @@ async def update_password(form_user_pwd: PasswordUpdate, session: AsyncSession =
         session.expunge_all()
 
         return db_password
+
+
+@router.post("/password/deactivate_password",
+             dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["ADMINISTRATOR"]))],
+             tags=["Authentication"])
+async def deactivate_password(form_user_pwd: PasswordDeactivate, session: AsyncSession = Depends(get_session)):
+    async with session.begin():
+        user_controller = UsersController(session)
+        password_controller = PasswordsController(session)
+
+        db_user = await user_controller.get_user_by_email(email=form_user_pwd.email)
+        if not db_user:
+            raise HTTPException(status_code=400, detail="Email does not exists")
+
+        db_password = await password_controller.disable_passwords(user_id=db_user.id)
+
+        session.expunge_all()
+
+        return {"msg": f"Password para {form_user_pwd.email} se ha desactivado correctamente."}

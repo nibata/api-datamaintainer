@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel.ext.asyncio.session import AsyncSession
 from ...configs.database import get_session
 from ...auth import auth_bearer
+from typing import List
 
 
 router = APIRouter()
@@ -28,3 +29,14 @@ async def create_group(group: GroupCreate, session: AsyncSession = Depends(get_s
         session.expunge_all()
 
         return rtn
+
+
+@router.get("/groups", response_model=List[GroupRead], tags=["Authentication"])
+async def read_groups(session: AsyncSession = Depends(get_session)):
+    async with session.begin():
+        group_controller = GroupsController(session)
+        db_groups = await group_controller.get_groups()
+
+        session.expunge_all()
+
+        return db_groups
