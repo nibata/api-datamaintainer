@@ -92,4 +92,4 @@ jobs:
       if: success() || failure()
       with:
         junitxml-path: ./app/res-test.xml
-        pytest-xml-coverage-path: ./app/coverage.xm
+        pytest-xml-coverage-path: ./app/coverage.xml
