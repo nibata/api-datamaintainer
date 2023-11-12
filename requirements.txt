@@ -14,7 +14,6 @@ exceptiongroup==1.1.0
 Faker==19.3.0
 fastapi==0.100.1
 gevent==23.9.1
-greenlet==2.0.2
 gunicorn==20.1.0
 h11==0.14.0
 httpcore==0.17.3
