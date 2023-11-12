@@ -7,14 +7,14 @@ certifi==2023.7.22
 cffi==1.15.1
 click==8.1.6
 coverage==7.3.1
-cryptography==41.0.3
+cryptography==41.0.5
 dnspython==2.4.1
 email-validator==2.0.0.post2
 exceptiongroup==1.1.0
 Faker==19.3.0
 fastapi==0.100.1
-gevent
-greenlet
+gevent==23.9.1
+greenlet==2.0.2
 gunicorn==20.1.0
 h11==0.14.0
 httpcore==0.17.3
@@ -33,7 +33,7 @@ pluggy==1.2.0
 psycopg2-binary==2.9.6
 py==1.11.0
 pycparser==2.21
-pydantic==1.10.12
+pydantic==1.10.13
 pyhumps==3.8.0
 PyJWT==2.8.0
 pytest==7.4.0
@@ -55,7 +55,7 @@ starlette==0.27.0
 tomli==2.0.1
 typing_extensions==4.7.1
 ujson==5.6.0
-urllib3==2.0.4
+urllib3==2.0.7
 uvicorn==0.23.2
 uvloop==0.17.0
 watchfiles==0.18.1
