@@ -106,6 +106,11 @@ async def test_create_use_and_create_update_password():
         "password": "pwd_test",
     }
 
+    json_not_active_user = {
+        "email": "user@test.com",
+        "password": "pwd_test"
+    }
+
     json_update = {
         "email": "user@test.com",
         "current-password": "pwd_test",
@@ -113,7 +118,7 @@ async def test_create_use_and_create_update_password():
         "expiration-date": "2099-11-11"
     }
 
-    json_update_email_does_not_exist = {
+    json_update_email_does_not_exists = {
         "email": "userr@test.com",
         "current-password": "pwd_test",
         "new-password": "pwd_test_updated",
@@ -136,7 +141,7 @@ async def test_create_use_and_create_update_password():
         "email": "user@test.com",
     }
 
-    json_deactivate_password_not_exist_email = {
+    json_deactivate_password_not_exists_email = {
         "email": "userr@test.com",
     }
     async with (AsyncClient(app=app, base_url="http://test") as async_client):
@@ -148,6 +153,8 @@ async def test_create_use_and_create_update_password():
                                                        json=json_insert,
                                                        headers=headers)
 
+        response_login_not_active_user = await async_client.post("/user/login", json=json_not_active_user)
+
         response_update_test = await async_client.post("/password/update_password",
                                                        json=json_update,
                                                        headers=headers)
@@ -157,9 +164,9 @@ async def test_create_use_and_create_update_password():
                                                                       json=json_update,
                                                                       headers=headers)
 
-        response_update_email_does_not_exist_test = await async_client.post("/password/update_password",
-                                                                            json=json_update_email_does_not_exist,
-                                                                            headers=headers)
+        response_update_email_does_not_exists_test = await async_client.post("/password/update_password",
+                                                                             json=json_update_email_does_not_exists,
+                                                                             headers=headers)
 
         response_create_password_already_active = await async_client.post("/password/create_password",
                                                                           json=json_create_password,
@@ -169,9 +176,9 @@ async def test_create_use_and_create_update_password():
                                                                json=json_deactivate_password,
                                                                headers=headers)
 
-        response_deactivate_password_not_exist_email = await async_client.post(
+        response_deactivate_password_not_exists_email = await async_client.post(
             "/password/deactivate_password",
-            json=json_deactivate_password_not_exist_email,
+            json=json_deactivate_password_not_exists_email,
             headers=headers)
 
         response_update_password_to_deactivates_one = await async_client.post("/password/update_password",
@@ -188,12 +195,14 @@ async def test_create_use_and_create_update_password():
             headers=headers)
 
     assert response_insert_test.status_code == 200
+    assert response_login_not_active_user.status_code == 200
+    assert response_login_not_active_user.json()["error"] == "User is not longer active"
     assert response_update_test.status_code == 200
     assert response_update_wrong_password_test.status_code == 400
-    assert response_update_email_does_not_exist_test.status_code == 400
+    assert response_update_email_does_not_exists_test.status_code == 400
     assert response_create_password_already_active.status_code == 400
     assert response_deactivate_password.status_code == 200
-    assert response_deactivate_password_not_exist_email.status_code == 400
+    assert response_deactivate_password_not_exists_email.status_code == 400
     assert response_update_password_to_deactivates_one.status_code == 400
     assert response_create_password_to_deactivated_one.status_code == 200
     assert response_create_password_not_existing_email.status_code == 400
@@ -265,6 +274,11 @@ async def test_create_group():
         "description": "Descripción"
     }
 
+    json_assign_group = {
+        "user-id": 1,
+        "group-id": 5
+    }
+
     async with AsyncClient(app=app, base_url="http://test") as async_client:
         response_token = await async_client.post("/user/login", json=json_token)
         auth_token = response_token.json()["access_token"]
@@ -272,9 +286,13 @@ async def test_create_group():
         headers = {"Authorization": f"Bearer {auth_token}"}
         response_first_insert_test = await async_client.post("/groups", json=json_insert, headers=headers)
         response_second_insert_test = await async_client.post("/groups", json=json_insert, headers=headers)
+        response_assign_group_user_test = await async_client.post("/users/assign_role_to_user",
+                                                                  json=json_assign_group,
+                                                                  headers=headers)
 
     assert response_first_insert_test.status_code == 200
     assert response_second_insert_test.status_code == 400
+    assert response_assign_group_user_test.status_code == 200
 
 
 @pytest.mark.anyio
@@ -283,3 +301,49 @@ async def test_get_group():
         response_get_group_test = await async_client.get("/groups")
 
     assert response_get_group_test.status_code == 200
+
+
+@pytest.mark.anyio
+async def test_assign_role_group():
+    json_token = {
+        "email": ADMIN_EMAIL,
+        "password": PASS_ADMIN
+    }
+
+    json_insert_already_exists = {
+        "user-id": 1,
+        "group-id": 1
+    }
+
+    json_insert_not_existing_user = {
+        "user-id": 99,
+        "group-id": 1
+    }
+
+    json_insert_not_existing_group = {
+        "user-id": 1,
+        "group-id": 99
+    }
+
+    async with AsyncClient(app=app, base_url="http://test") as async_client:
+        response_token = await async_client.post("/user/login", json=json_token)
+        auth_token = response_token.json()["access_token"]
+
+        headers = {"Authorization": f"Bearer {auth_token}"}
+
+        response_already_exists = await async_client.post("/users/assign_role_to_user",
+                                                          json=json_insert_already_exists,
+                                                          headers=headers)
+
+        response_not_existing_user = await async_client.post("/users/assign_role_to_user",
+                                                             json=json_insert_not_existing_user,
+                                                             headers=headers)
+
+        response_not_existing_group = await async_client.post("/users/assign_role_to_user",
+                                                              json=json_insert_not_existing_group,
+                                                              headers=headers)
+
+    assert response_already_exists.status_code == 400
+    assert response_not_existing_user.status_code == 400
+    assert response_not_existing_group.status_code == 400
+
