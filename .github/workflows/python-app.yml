@@ -67,7 +67,7 @@ jobs:
 
     - name: Unit Test
       working-directory: ./app
-      run: pytest --junitxml=res-test.xml --cov-report=term-missing:skip-covered --cov-report xml:coverage.xml
+      run: pytest --junitxml=res-test.xml --cov-report xml:coverage.xml
       env:
         SECRET_KEY: "WELL... NOTHING NEW, JUST THINKING ABOUT SECRETS"
         DB_DRIVER: postgresql
