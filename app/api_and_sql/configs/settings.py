@@ -28,7 +28,7 @@ SQLALCHEMY_DATABASE_URL = f"{DB_DRIVER}+{DB_ASYNC_DRIVER}://{DB_USER}:{DB_PASS}@
 
 UNIT_TEST = os.environ.get("UNIT_TEST") == "True"
 DB_ASYNC_TEST = os.environ.get("DB_ASYNC_TEST")
-if UNIT_TEST:  # # pragma: no cover
+if UNIT_TEST:  # pragma: no cover
     SQLALCHEMY_DATABASE_URL = DB_ASYNC_TEST
 
 DEBUG = os.environ.get("DEBUG")
