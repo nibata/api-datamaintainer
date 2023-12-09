@@ -1,11 +1,9 @@
-import os
-import pytest
-from alembic import command
-from alembic.config import Config
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import create_engine
-
-from alembic import context
+from alembic.config import Config
+from alembic import command
+import pytest
+import os
 
 
 # Database setup

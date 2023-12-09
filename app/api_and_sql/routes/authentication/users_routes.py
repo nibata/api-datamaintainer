@@ -141,3 +141,22 @@ async def assign_role_to_user(user_group: UserGroupLink, session: AsyncSession =
             raise HTTPException(status_code=400, detail="The role doesn't exists")
 
         return await user_controller.assign_role_to_user(user_id=user_group.user_id, group_id=user_group.group_id)
+
+
+@router.put("/users/{user_id}",
+            response_model=User,
+            tags=["Authentication"],
+            dependencies=[Depends(auth_bearer.JWTBearer(required_permission=["ADMINISTRATOR"]))])
+async def update_is_active_user(user_id: int,
+                                is_active: Annotated[bool, Query(alias="is-active")],
+                                session: AsyncSession = Depends(get_session)):
+    async with session.begin():
+        user_controller = UsersController(session)
+        user = await user_controller.get_user(user_id=user_id)
+
+        if user is None:
+            raise HTTPException(status_code=400, detail="The user doesn't exists")
+
+        else:
+            return await user_controller.set_is_active_user(user_id=user_id, is_active=is_active)
+
