@@ -194,6 +194,14 @@ async def test_create_use_and_create_update_password():
             json=json_create_password_not_existing_mail,
             headers=headers)
 
+        response_update_status_is_active = await async_client.put("/users/2",
+                                                                  params={"is-active": True},
+                                                                  headers=headers)
+
+        response_update_status_is_active_user_doesnt_exists = await async_client.put("/users/100000",
+                                                                                     params={"is-active": True},
+                                                                                     headers=headers)
+
     assert response_insert_test.status_code == 200
     assert response_login_not_active_user.status_code == 200
     assert response_login_not_active_user.json()["error"] == "User is not longer active"
@@ -206,6 +214,8 @@ async def test_create_use_and_create_update_password():
     assert response_update_password_to_deactivates_one.status_code == 400
     assert response_create_password_to_deactivated_one.status_code == 200
     assert response_create_password_not_existing_email.status_code == 400
+    assert response_update_status_is_active.status_code == 200
+    assert response_update_status_is_active_user_doesnt_exists.status_code == 400
 
 
 @pytest.mark.anyio
@@ -346,4 +356,3 @@ async def test_assign_role_group():
     assert response_already_exists.status_code == 400
     assert response_not_existing_user.status_code == 400
     assert response_not_existing_group.status_code == 400
-

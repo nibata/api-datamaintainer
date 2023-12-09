@@ -63,3 +63,19 @@ class UsersController:
 
         return {'UserId': user_id,
                 'GroupId': group_id}
+
+    async def set_is_active_user(self, user_id: int, is_active: bool):
+        """
+        Set the user state. In oder word change de property is_active for the model users
+        :param user_id: the id of the user whose state is to be set.
+        :param is_active: the final value of the state
+        :return: model user
+        """
+
+        statement = select(model_users.User).where(model_users.User.id == user_id)
+        result = await self.session.execute(statement)
+        user = result.scalar_one()
+
+        user.is_active = is_active
+
+        return user
