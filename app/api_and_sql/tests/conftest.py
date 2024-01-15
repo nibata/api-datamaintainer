@@ -17,6 +17,8 @@ def db():
     # Run Alembic migrations
     alembic_cfg = Config("alembic.ini")
     alembic_cfg.set_main_option("script_location", "alembic")
+    # I couldn't make it work with an async url, doesn't matter due I don't really need it
+    # in the upgrade of the database
     command.upgrade(alembic_cfg, "head")
 
     # Create a new session for the tests
