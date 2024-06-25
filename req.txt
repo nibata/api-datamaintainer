@@ -1,5 +1,5 @@
 alembic==1.11.1
-anyio==3.7.1
+anyio==4.4.0
 async-generator==1.10
 asyncpg==0.28.0
 attrs==22.2.0
