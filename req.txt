@@ -50,7 +50,7 @@ sortedcontainers==2.4.0
 SQLAlchemy==1.4.41
 sqlalchemy2-stubs==0.0.2a35
 sqlmodel==0.0.8
-starlette==0.27.0
+starlette==0.47.2
 tomli==2.0.1
 typing_extensions==4.7.1
 ujson==5.6.0
